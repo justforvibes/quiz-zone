@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inner Child Wound Quiz — Know Yourself</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600;1,400&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f5f0eb; --card: #fffdf9; --border: #e2d9ce;
+      --text: #2c2416; --muted: #9a8f82; --accent: #c0845a;
+      --accent2: #7a9e8e; --soft: #e8ddd4;
+    }
+    body { background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 16px 80px; }
+    .wrap { position:relative;z-index:1;width:100%;max-width:580px; }
+    header { text-align:center;margin-bottom:36px; }
+    .back-link { display:inline-block;margin-bottom:24px;color:var(--accent);font-size:13px;text-decoration:none; }
+    .back-link:hover { text-decoration:underline; }
+    .tag { display:inline-block;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:14px; }
+    h1 { font-family:'Lora',serif;font-size:clamp(1.8rem,5vw,2.6rem);font-weight:600;line-height:1.2;color:var(--text); }
+    header p { margin-top:12px;color:var(--muted);font-size:14px;font-weight:300;line-height:1.6; }
+    .progress-wrap { margin-bottom:28px; }
+    .progress-label { display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:8px; }
+    .progress-bar { height:4px;background:var(--soft);border-radius:100px;overflow:hidden; }
+    .progress-fill { height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:100px;transition:width 0.4s ease; }
+    .card { background:var(--card);border:1px solid var(--border);border-radius:24px;padding:32px 28px;box-shadow:0 4px 24px rgba(192,132,90,0.08); }
+    .question-num { font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:10px; }
+    .question-text { font-family:'Lora',serif;font-size:1.15rem;font-weight:600;line-height:1.5;color:var(--text);margin-bottom:24px; }
+    .options { display:flex;flex-direction:column;gap:10px; }
+    .opt { padding:14px 18px;border-radius:14px;border:1.5px solid var(--border);background:transparent;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;text-align:left;cursor:pointer;transition:all 0.2s;line-height:1.5; }
+    .opt:hover { border-color:var(--accent);background:rgba(192,132,90,0.06); }
+    .opt.selected { border-color:var(--accent);background:rgba(192,132,90,0.1); }
+    .nav-row { display:flex;gap:10px;margin-top:24px; }
+    .btn-back { padding:12px 20px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Nunito',sans-serif;font-size:14px;cursor:pointer;transition:all 0.2s; }
+    .btn-back:hover { border-color:var(--accent);color:var(--text); }
+    .btn-next { flex:1;padding:14px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:'Lora',serif;font-size:15px;font-style:italic;cursor:pointer;transition:opacity 0.2s,transform 0.15s;opacity:0.4;pointer-events:none; }
+    .btn-next.active { opacity:1;pointer-events:all; }
+    .btn-next.active:hover { opacity:0.9;transform:translateY(-1px); }
+    .result-box { animation:fadeUp 0.6s ease; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .result-type-tag { display:inline-block;padding:6px 18px;border-radius:100px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px; }
+    .result-title { font-family:'Lora',serif;font-size:clamp(1.6rem,6vw,2.4rem);font-weight:600;line-height:1.2;margin-bottom:8px; }
+    .result-subtitle { font-size:14px;color:var(--muted);margin-bottom:24px;font-style:italic; }
+    .scores { margin-bottom:28px;display:flex;flex-direction:column;gap:12px; }
+    .score-row { }
+    .score-label { display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px; }
+    .score-bar { height:6px;background:var(--soft);border-radius:100px;overflow:hidden; }
+    .score-fill { height:100%;border-radius:100px;transition:width 1s ease; }
+    .detail-sections { display:flex;flex-direction:column;gap:16px;margin-bottom:24px; }
+    .detail-card { background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:18px 20px; }
+    .detail-card h3 { font-family:'Lora',serif;font-size:0.95rem;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px; }
+    .detail-card p { font-size:13px;color:var(--muted);line-height:1.8; }
+    .share-btn { width:100%;padding:14px;border-radius:12px;border:none;background:var(--accent2);color:#fff;font-family:'Lora',serif;font-size:15px;font-style:italic;cursor:pointer;transition:opacity 0.2s;margin-bottom:12px; }
+    .share-btn:hover { opacity:0.9; }
+    .retake-btn { width:100%;padding:14px;border-radius:12px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-family:'Nunito',sans-serif;font-size:14px;cursor:pointer;transition:all 0.2s;margin-bottom:12px; }
+    .retake-btn:hover { background:rgba(192,132,90,0.08); }
+    .home-btn { width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Nunito',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s;text-decoration:none;display:block;text-align:center; }
+    .home-btn:hover { border-color:var(--accent);color:var(--text); }
+    footer { margin-top:40px;text-align:center;color:var(--muted);font-size:12px; }
+    footer a { color:var(--accent);text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back-link" href="index.html">← All Quizzes</a>
+  <header>
+    <div class="tag">🧒 Inner Child</div>
+    <h1>Inner Child Wound Quiz</h1>
+    <p>Uncover the childhood wound quietly shaping your adult relationships and reactions.</p>
+  </header>
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span id="progressText">Question 1 of 12</span>
+      <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+  <div class="card" id="quizCard">
+    <div class="question-num" id="qNum"></div>
+    <div class="question-text" id="qText"></div>
+    <div class="options" id="optionsWrap"></div>
+    <div class="nav-row">
+      <button class="btn-back" id="btnBack" onclick="goBack()" style="display:none">← Back</button>
+      <button class="btn-next" id="btnNext" onclick="goNext()">Continue →</button>
+    </div>
+  </div>
+  <footer>Made with 💗 by <a href="https://justforvibes.github.io">JustForVibes</a> · For self-reflection, not clinical diagnosis.</footer>
+</div>
+<script>
+const questions = [
+  { text: "Which fear shows up most strongly in your adult relationships?", opts: [
+    { text: "Fear of being left or abandoned without warning", scores: {Ab:3,Re:0,Hu:0,Be:0} },
+    { text: "Fear of being unwanted, disliked, or rejected", scores: {Ab:0,Re:3,Hu:0,Be:0} },
+    { text: "Fear of being embarrassed, exposed, or seen as inadequate", scores: {Ab:0,Re:0,Hu:3,Be:0} },
+    { text: "Fear of being deceived, used, or taken advantage of", scores: {Ab:0,Re:0,Hu:0,Be:3} }
+  ]},
+  { text: "When someone close doesn't reply to you for a while, you feel...", opts: [
+    { text: "Panicked — convinced something has gone wrong", scores: {Ab:3,Re:1,Hu:0,Be:0} },
+    { text: "Rejected — maybe they don't want to talk to me anymore", scores: {Ab:0,Re:3,Hu:0,Be:0} },
+    { text: "Embarrassed — maybe I said something wrong or stupid", scores: {Ab:0,Re:0,Hu:3,Be:0} },
+    { text: "Suspicious — wondering if they're being dishonest", scores: {Ab:0,Re:0,Hu:0,Be:3} }
+  ]},
+  { text: "Your most painful kind of relationship experience is...", opts: [
+    { text: "Being left or ghosted without explanation", scores: {Ab:3,Re:0,Hu:0,Be:0} },
+    { text: "Being excluded or treated as an outsider", scores: {Ab:0,Re:3,Hu:0,Be:0} },
+    { text: "Being publicly criticised or made to feel inferior", scores: {Ab:0,Re:0,Hu:3,Be:0} },
+    { text: "Discovering someone wasn't who they said they were", scores: {Ab:0,Re:0,Hu:0,Be:3} }
+  ]},
+  { text: "As a child, the emotional environment you grew up in was often...", opts: [
+    { text: "Unstable — love was inconsistent and unpredictable", scores: {Ab:3,Re:0,Hu:0,Be:0} },
+    { text: "Critical — never quite feeling good enough", scores: {Ab:0,Re:3,Hu:0,Be:0} },
+    { text: "Shaming — mistakes were treated harshly", scores: {Ab:0,Re:0,Hu:3,Be:0} },
+    { text: "Unreliable — people said one thing but did another", scores: {Ab:0,Re:0,Hu:0,Be:3} }
+  ]},
+  { text: "In adult relationships, you find yourself repeatedly...", opts: [
+    { text: "Clinging or seeking constant reassurance that you won't be left", scores: {Ab:3,Re:0,Hu:0,Be:0} },
+    { text: "Working hard to earn approval and love", scores: {Ab:0,Re:3,Hu:0,Be:0} },
+    { text: "Hiding parts of yourself out of shame or fear of judgment", scores: {Ab:0,Re:0,Hu:3,Be:0} },
+    { text: "Testing people or struggling to trust fully", scores: {Ab:0,Re:0,Hu:0,Be:3} }
+  ]},
+  { text: "Which internal message feels most familiar?", opts: [
+    { text: "'People always leave eventually'", scores: {Ab:3,Re:0,Hu:0,Be:0} },
+    { text: "'I'm not enough — not interesting, attractive, or lovable enough'", scores: {Ab:0,Re:3,Hu:0,Be:0} },
+    { text: "'I'm embarrassing or defective in some way'", scores: {Ab:0,Re:0,Hu:3,Be:0} },
+    { text: "'I can't fully trust anyone — people always have an agenda'", scores: {Ab:0,Re:0,Hu:0,Be:3} }
+  ]},
+  { text: "What triggers the deepest emotional pain in you?", opts: [
+    { text: "Someone withdrawing love or going cold without reason", scores: {Ab:3,Re:0,Hu:0,Be:0} },
+    { text: "Not being chosen, invited, or included", scores: {Ab:0,Re:3,Hu:0,Be:0} },
+    { text: "Being seen at your worst or being judged harshly", scores: {Ab:0,Re:0,Hu:3,Be:0} },
+    { text: "Discovering you were lied to or manipulated", scores: {Ab:0,Re:0,Hu:0,Be:3} }
+  ]},
+  { text: "You are most likely to self-sabotage by...", opts: [
+    { text: "Pushing people away before they can leave you", scores: {Ab:3,Re:0,Hu:0,Be:0} },
+    { text: "People-pleasing to avoid rejection", scores: {Ab:0,Re:3,Hu:0,Be:0} },
+    { text: "Self-deprecating or minimizing your achievements", scores: {Ab:0,Re:0,Hu:3,Be:0} },
+    { text: "Not allowing people in — keeping emotional walls up", scores: {Ab:0,Re:0,Hu:0,Be:3} }
+  ]},
+  { text: "In conflict, your deepest underlying fear is often...", opts: [
+    { text: "'This is the beginning of the end — they're going to leave'", scores: {Ab:3,Re:0,Hu:0,Be:0} },
+    { text: "'They're going to decide I'm not worth their time'", scores: {Ab:0,Re:3,Hu:0,Be:0} },
+    { text: "'They're going to see how flawed and broken I really am'", scores: {Ab:0,Re:0,Hu:3,Be:0} },
+    { text: "'They've been hiding something — I should have known better'", scores: {Ab:0,Re:0,Hu:0,Be:3} }
+  ]},
+  { text: "How do you relate to your own sense of worth?", opts: [
+    { text: "My worth depends on whether people stay", scores: {Ab:3,Re:0,Hu:0,Be:0} },
+    { text: "My worth depends on whether people like and approve of me", scores: {Ab:0,Re:3,Hu:0,Be:0} },
+    { text: "My worth is undermined by my flaws and failures", scores: {Ab:0,Re:0,Hu:3,Be:0} },
+    { text: "My worth is protected — I rarely let people close enough to threaten it", scores: {Ab:0,Re:0,Hu:0,Be:3} }
+  ]},
+  { text: "What did you most need but not always receive as a child?", opts: [
+    { text: "Consistent, reliable love — knowing someone would stay", scores: {Ab:3,Re:0,Hu:0,Be:0} },
+    { text: "Genuine acceptance without having to earn it", scores: {Ab:0,Re:3,Hu:0,Be:0} },
+    { text: "A safe space to make mistakes without shame", scores: {Ab:0,Re:0,Hu:3,Be:0} },
+    { text: "Adults who kept their word and were honest", scores: {Ab:0,Re:0,Hu:0,Be:3} }
+  ]},
+  { text: "Which statement lands most deeply for you?", opts: [
+    { text: "'I'm terrified of being left — so I hold on or push first'", scores: {Ab:3,Re:0,Hu:0,Be:0} },
+    { text: "'I spend so much energy trying to be someone people will keep'", scores: {Ab:0,Re:3,Hu:0,Be:0} },
+    { text: "'There is a version of me I hide because I believe it is unlovable'", scores: {Ab:0,Re:0,Hu:3,Be:0} },
+    { text: "'I want deep connection but trusting people fully feels too risky'", scores: {Ab:0,Re:0,Hu:0,Be:3} }
+  ]}
+];
+const results = {
+  Ab: { type:"Abandonment Wound", emoji:"🫧", color:"#c0845a", tagBg:"rgba(192,132,90,0.15)", tagColor:"#8a5a2a",
+    subtitle:"You learned early that people leave — and your heart never quite forgot.",
+    sections:[
+      { icon:"🧡", title:"Who you are", text:"The abandonment wound forms when love is inconsistent — when people who were supposed to stay, didn't. Your inner child learned that closeness is followed by loss, that love is unreliable, and that you must hold on tight or push people away before they leave on their own. This wound now lives in your adult relationships." },
+      { icon:"🫧", title:"In relationships", text:"You may cling, seek constant reassurance, or test partners to see if they'll stay. Or, paradoxically, you may push people away first — protecting yourself from the pain of eventual abandonment. The intensity of your emotional reactions to small withdrawals often traces back to this old wound." },
+      { icon:"⚡", title:"Your challenge", text:"Learning that not everyone will leave — and that you can survive it if they do. This requires slowly rebuilding a sense of internal security that doesn't depend entirely on another person's presence or constancy. Healing begins with being the one who stays for yourself." },
+      { icon:"🔮", title:"What helps you thrive", text:"Consistent, reliable people in your life. Therapy focused on attachment and loss. Learning to self-soothe when someone is temporarily unavailable. Understanding that healthy relationships include space — and space is not the same as abandonment." }
+    ]},
+  Re: { type:"Rejection Wound", emoji:"🌷", color:"#9e7a9e", tagBg:"rgba(158,122,158,0.15)", tagColor:"#6a3a6a",
+    subtitle:"Somewhere, you decided you had to earn the right to be loved.",
+    sections:[
+      { icon:"💜", title:"Who you are", text:"The rejection wound forms when a child doesn't receive consistent, unconditional acceptance. You may have felt that love was conditional — on your grades, your behaviour, your achievements, your personality. And so you began adapting, performing, becoming what others needed you to be." },
+      { icon:"🌷", title:"In relationships", text:"You work hard for love. You people-please, avoid conflict, change yourself to fit. Criticism — even gentle — can hit devastatingly hard. Not being chosen feels like proof that you were right all along: not enough. Approval becomes a constant craving that nothing quite satisfies." },
+      { icon:"⚡", title:"Your challenge", text:"Discovering that you are inherently worthy — not as a result of performance, approval, or being chosen. This is often the hardest belief to change because it contradicts what was modelled early. Inner child work and self-compassion practice are powerful tools here." },
+      { icon:"🔮", title:"What helps you thrive", text:"Relationships where you're accepted as you are. Learning to validate yourself without external approval. Therapy that explores where the 'not enough' belief began. Slowly practicing being authentic — even imperfect — and surviving the discomfort." }
+    ]},
+  Hu: { type:"Humiliation Wound", emoji:"🪞", color:"#8a7a9e", tagBg:"rgba(138,122,158,0.15)", tagColor:"#5a4a7a",
+    subtitle:"You carry a deep sense that part of you is defective, shameful, or too much.",
+    sections:[
+      { icon:"💙", title:"Who you are", text:"The humiliation wound often forms in environments where mistakes were shamed, vulnerabilities were mocked, or the child was repeatedly made to feel inferior or embarrassing. You internalised the message that there is something inherently wrong with you — and you've been working to hide it ever since." },
+      { icon:"🪞", title:"In relationships", text:"You may minimise your achievements, deflect compliments, hide your struggles, or avoid any situation where you could be seen at your worst. Intimacy is hard because intimacy requires being seen fully — and you fear that full visibility will confirm your worst belief about yourself." },
+      { icon:"⚡", title:"Your challenge", text:"Shame dissolves in the light of compassionate witness — your own, or another's. The antidote to the humiliation wound is not perfection; it's being seen in your imperfection and experiencing that you are still worthy of love. Vulnerability, practiced gradually, is the path." },
+      { icon:"🔮", title:"What helps you thrive", text:"Safe relationships where you can be imperfect without judgment. Shame-focused therapy. Self-compassion practice — speaking to yourself as you would a close friend. Celebrating your whole self, not just the polished parts." }
+    ]},
+  Be: { type:"Betrayal Wound", emoji:"🗝️", color:"#7a8e9e", tagBg:"rgba(122,142,158,0.15)", tagColor:"#3a5a6a",
+    subtitle:"Trust was broken early — and part of you is still waiting for it to happen again.",
+    sections:[
+      { icon:"💙", title:"Who you are", text:"The betrayal wound forms when people who were trusted — caregivers, partners, close friends — broke that trust in significant ways. Lies, broken promises, secret-keeping, manipulation. Your inner child learned that people can't be fully trusted, that hidden motives exist, that what you see is not always what is." },
+      { icon:"🗝️", title:"In relationships", text:"You may find it hard to fully trust even good people. You look for cracks, inconsistencies, signs of deception. You may keep emotional distance as a precaution. When someone does betray you — even in small ways — it confirms everything the wound always feared." },
+      { icon:"⚡", title:"Your challenge", text:"Learning to extend trust incrementally — to people who have genuinely earned it — rather than either trusting fully and blindly, or trusting no one at all. Trust is not binary. It's something that can be built slowly, in small doses, with evidence." },
+      { icon:"🔮", title:"What helps you thrive", text:"People who are consistently honest, even about small things. Therapy to process the original betrayal(s). Learning to distinguish past betrayers from present-day safe people. Allowing yourself to hope — carefully, courageously — for trustworthy connection." }
+    ]}
+};
+
+let current = 0;
+let answers = new Array(questions.length).fill(null);
+
+function render() {
+  const q = questions[current];
+  document.getElementById('qNum').textContent = 'Question ' + (current+1);
+  document.getElementById('qText').textContent = q.text;
+  document.getElementById('progressText').textContent = 'Question ' + (current+1) + ' of ' + questions.length;
+  const pct = Math.round((current / questions.length) * 100);
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('btnBack').style.display = current > 0 ? 'block' : 'none';
+  const wrap = document.getElementById('optionsWrap');
+  wrap.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt' + (answers[current] === i ? ' selected' : '');
+    btn.textContent = opt.text;
+    btn.onclick = () => selectOpt(i);
+    wrap.appendChild(btn);
+  });
+  const next = document.getElementById('btnNext');
+  next.textContent = current === questions.length - 1 ? 'See My Result ✦' : 'Continue →';
+  next.className = 'btn-next' + (answers[current] !== null ? ' active' : '');
+}
+
+function selectOpt(i) {
+  answers[current] = i;
+  document.querySelectorAll('.opt').forEach((b, idx) => b.classList.toggle('selected', idx === i));
+  document.getElementById('btnNext').classList.add('active');
+}
+
+function goNext() {
+  if (answers[current] === null) return;
+  if (current < questions.length - 1) {
+    current++;
+    render();
+    document.querySelector('.card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else { showResult(); }
+}
+
+function goBack() {
+  if (current > 0) { current--; render(); }
+}
+
+function showResult() {
+  const totals = {};
+  Object.keys(results).forEach(k => totals[k] = 0);
+  answers.forEach((ans, qi) => {
+    if (ans !== null) {
+      const scores = questions[qi].opts[ans].scores;
+      Object.keys(scores).forEach(k => totals[k] = (totals[k]||0) + scores[k]);
+    }
+  });
+  const winner = Object.keys(totals).reduce((a,b) => totals[a] > totals[b] ? a : b);
+  const r = results[winner];
+  const total = Object.values(totals).reduce((a,b) => a+b, 0) || 1;
+  document.getElementById('progressText').textContent = 'Complete!';
+  document.getElementById('progressPct').textContent = '100%';
+  document.getElementById('progressFill').style.width = '100%';
+  const card = document.getElementById('quizCard');
+  card.innerHTML = `
+    <div class="result-box">
+      <div class="result-type-tag" style="background:${r.tagBg};color:${r.tagColor};">${r.emoji} ${r.type}</div>
+      <div class="result-title" style="color:${r.color}">${r.emoji} ${r.type}</div>
+      <div class="result-subtitle">${r.subtitle}</div>
+      <div class="scores">
+        ${Object.entries(totals).map(([k,v]) => `
+          <div class="score-row">
+            <div class="score-label"><span>${results[k].emoji} ${results[k].type}</span><span>${Math.round((v/total)*100)}%</span></div>
+            <div class="score-bar"><div class="score-fill" style="width:${Math.round((v/total)*100)}%;background:${results[k].color}"></div></div>
+          </div>`).join('')}
+      </div>
+      <div class="detail-sections">
+        ${r.sections.map(s => `<div class="detail-card"><h3>${s.icon} ${s.title}</h3><p>${s.text}</p></div>`).join('')}
+      </div>
+      <button class="share-btn" onclick="shareResult('${r.type}','${r.emoji}','${r.subtitle}')">📤 Share My Result</button>
+      <button class="retake-btn" onclick="retake()">↩ Retake Quiz</button>
+      <a class="home-btn" href="index.html">← Explore More Quizzes</a>
+    </div>`;
+}
+
+function shareResult(type, emoji, subtitle) {
+  const text = emoji + ' My result: ' + type + '\n"' + subtitle + '"\n\nFind out yours 👉 ' + window.location.href;
+  if (navigator.share) navigator.share({ title: 'My Quiz Result', text });
+  else navigator.clipboard.writeText(text).then(() => alert('Result copied! Share it 🎉'));
+}
+
+function retake() {
+  current = 0;
+  answers = new Array(questions.length).fill(null);
+  document.getElementById('quizCard').innerHTML = `
+    <div class="question-num" id="qNum"></div>
+    <div class="question-text" id="qText"></div>
+    <div class="options" id="optionsWrap"></div>
+    <div class="nav-row">
+      <button class="btn-back" id="btnBack" onclick="goBack()" style="display:none">← Back</button>
+      <button class="btn-next" id="btnNext" onclick="goNext()">Continue →</button>
+    </div>`;
+  render();
+}
+
+render();
+
+</script>
+</body>
+</html>

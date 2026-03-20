@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Love Language Quiz — Know Yourself</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600;1,400&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f5f0eb; --card: #fffdf9; --border: #e2d9ce;
+      --text: #2c2416; --muted: #9a8f82; --accent: #c0845a;
+      --accent2: #7a9e8e; --soft: #e8ddd4;
+    }
+    body { background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 16px 80px; }
+    .wrap { position:relative;z-index:1;width:100%;max-width:580px; }
+    header { text-align:center;margin-bottom:36px; }
+    .back-link { display:inline-block;margin-bottom:24px;color:var(--accent);font-size:13px;text-decoration:none; }
+    .back-link:hover { text-decoration:underline; }
+    .tag { display:inline-block;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:14px; }
+    h1 { font-family:'Lora',serif;font-size:clamp(1.8rem,5vw,2.6rem);font-weight:600;line-height:1.2;color:var(--text); }
+    header p { margin-top:12px;color:var(--muted);font-size:14px;font-weight:300;line-height:1.6; }
+    .progress-wrap { margin-bottom:28px; }
+    .progress-label { display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:8px; }
+    .progress-bar { height:4px;background:var(--soft);border-radius:100px;overflow:hidden; }
+    .progress-fill { height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:100px;transition:width 0.4s ease; }
+    .card { background:var(--card);border:1px solid var(--border);border-radius:24px;padding:32px 28px;box-shadow:0 4px 24px rgba(192,132,90,0.08); }
+    .question-num { font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:10px; }
+    .question-text { font-family:'Lora',serif;font-size:1.15rem;font-weight:600;line-height:1.5;color:var(--text);margin-bottom:24px; }
+    .options { display:flex;flex-direction:column;gap:10px; }
+    .opt { padding:14px 18px;border-radius:14px;border:1.5px solid var(--border);background:transparent;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;text-align:left;cursor:pointer;transition:all 0.2s;line-height:1.5; }
+    .opt:hover { border-color:var(--accent);background:rgba(192,132,90,0.06); }
+    .opt.selected { border-color:var(--accent);background:rgba(192,132,90,0.1); }
+    .nav-row { display:flex;gap:10px;margin-top:24px; }
+    .btn-back { padding:12px 20px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Nunito',sans-serif;font-size:14px;cursor:pointer;transition:all 0.2s; }
+    .btn-back:hover { border-color:var(--accent);color:var(--text); }
+    .btn-next { flex:1;padding:14px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:'Lora',serif;font-size:15px;font-style:italic;cursor:pointer;transition:opacity 0.2s,transform 0.15s;opacity:0.4;pointer-events:none; }
+    .btn-next.active { opacity:1;pointer-events:all; }
+    .btn-next.active:hover { opacity:0.9;transform:translateY(-1px); }
+    .result-box { animation:fadeUp 0.6s ease; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .result-type-tag { display:inline-block;padding:6px 18px;border-radius:100px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px; }
+    .result-title { font-family:'Lora',serif;font-size:clamp(1.6rem,6vw,2.4rem);font-weight:600;line-height:1.2;margin-bottom:8px; }
+    .result-subtitle { font-size:14px;color:var(--muted);margin-bottom:24px;font-style:italic; }
+    .scores { margin-bottom:28px;display:flex;flex-direction:column;gap:12px; }
+    .score-row { }
+    .score-label { display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px; }
+    .score-bar { height:6px;background:var(--soft);border-radius:100px;overflow:hidden; }
+    .score-fill { height:100%;border-radius:100px;transition:width 1s ease; }
+    .detail-sections { display:flex;flex-direction:column;gap:16px;margin-bottom:24px; }
+    .detail-card { background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:18px 20px; }
+    .detail-card h3 { font-family:'Lora',serif;font-size:0.95rem;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px; }
+    .detail-card p { font-size:13px;color:var(--muted);line-height:1.8; }
+    .share-btn { width:100%;padding:14px;border-radius:12px;border:none;background:var(--accent2);color:#fff;font-family:'Lora',serif;font-size:15px;font-style:italic;cursor:pointer;transition:opacity 0.2s;margin-bottom:12px; }
+    .share-btn:hover { opacity:0.9; }
+    .retake-btn { width:100%;padding:14px;border-radius:12px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-family:'Nunito',sans-serif;font-size:14px;cursor:pointer;transition:all 0.2s;margin-bottom:12px; }
+    .retake-btn:hover { background:rgba(192,132,90,0.08); }
+    .home-btn { width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Nunito',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s;text-decoration:none;display:block;text-align:center; }
+    .home-btn:hover { border-color:var(--accent);color:var(--text); }
+    footer { margin-top:40px;text-align:center;color:var(--muted);font-size:12px; }
+    footer a { color:var(--accent);text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back-link" href="index.html">← All Quizzes</a>
+  <header>
+    <div class="tag">💌 Love Language</div>
+    <h1>Love Language Quiz</h1>
+    <p>Find out how you naturally give and receive love — and how to ask for what you truly need.</p>
+  </header>
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span id="progressText">Question 1 of 12</span>
+      <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+  <div class="card" id="quizCard">
+    <div class="question-num" id="qNum"></div>
+    <div class="question-text" id="qText"></div>
+    <div class="options" id="optionsWrap"></div>
+    <div class="nav-row">
+      <button class="btn-back" id="btnBack" onclick="goBack()" style="display:none">← Back</button>
+      <button class="btn-next" id="btnNext" onclick="goNext()">Continue →</button>
+    </div>
+  </div>
+  <footer>Made with 💗 by <a href="https://justforvibes.github.io">JustForVibes</a> · For self-reflection, not clinical diagnosis.</footer>
+</div>
+<script>
+const questions = [
+  { text: "After a hard day, what comforts you most from a partner?", opts: [
+    { text: "Them saying 'I'm proud of you, you did great'", scores: {W:3,T:0,Ti:0,G:0,A:0} },
+    { text: "A long hug with no words", scores: {W:0,T:3,Ti:0,G:0,A:0} },
+    { text: "Them sitting with me, fully present", scores: {W:0,T:0,Ti:3,G:0,A:0} },
+    { text: "Coming home to a meal they cooked", scores: {W:0,T:0,Ti:0,G:0,A:3} }
+  ]},
+  { text: "What makes you feel most loved in a relationship?", opts: [
+    { text: "Hearing 'I love you' and genuine compliments", scores: {W:3,T:0,Ti:0,G:0,A:0} },
+    { text: "Physical closeness — holding hands, cuddling", scores: {W:0,T:3,Ti:0,G:0,A:0} },
+    { text: "Undivided time and attention", scores: {W:0,T:0,Ti:3,G:0,A:0} },
+    { text: "Thoughtful surprises or small gifts", scores: {W:0,T:0,Ti:0,G:3,A:0} }
+  ]},
+  { text: "When a partner forgets an important date, you feel hurt because...", opts: [
+    { text: "They didn't acknowledge what matters to me", scores: {W:3,T:0,Ti:0,G:0,A:0} },
+    { text: "They missed a chance to be close", scores: {W:0,T:2,Ti:1,G:0,A:0} },
+    { text: "We could have spent quality time together", scores: {W:0,T:0,Ti:3,G:0,A:0} },
+    { text: "A small gesture would have meant everything", scores: {W:0,T:0,Ti:0,G:3,A:0} }
+  ]},
+  { text: "Your partner is stressed. You automatically want to...", opts: [
+    { text: "Tell them everything you love about them", scores: {W:3,T:0,Ti:0,G:0,A:0} },
+    { text: "Hold them close without speaking", scores: {W:0,T:3,Ti:0,G:0,A:0} },
+    { text: "Cancel plans to spend the evening with them", scores: {W:0,T:0,Ti:3,G:0,A:0} },
+    { text: "Bring them something — food, flowers, a gift", scores: {W:0,T:0,Ti:0,G:2,A:1} }
+  ]},
+  { text: "Which means the most to you?", opts: [
+    { text: "A heartfelt message they wrote just for you", scores: {W:3,T:0,Ti:0,G:0,A:0} },
+    { text: "A spontaneous kiss or gentle touch", scores: {W:0,T:3,Ti:0,G:0,A:0} },
+    { text: "A whole day planned just for the two of you", scores: {W:0,T:0,Ti:3,G:0,A:0} },
+    { text: "A small gift they picked because it reminded them of you", scores: {W:0,T:0,Ti:0,G:3,A:0} }
+  ]},
+  { text: "What bothers you most in a relationship?", opts: [
+    { text: "Not hearing enough appreciation or affirmation", scores: {W:3,T:0,Ti:0,G:0,A:0} },
+    { text: "Lack of physical affection", scores: {W:0,T:3,Ti:0,G:0,A:0} },
+    { text: "Partner always distracted or unavailable", scores: {W:0,T:0,Ti:3,G:0,A:0} },
+    { text: "Partner never puts effort into thoughtful gestures", scores: {W:0,T:0,Ti:0,G:1,A:2} }
+  ]},
+  { text: "On your birthday, the perfect gesture from a partner is...", opts: [
+    { text: "A long personal letter about what you mean to them", scores: {W:3,T:0,Ti:0,G:0,A:0} },
+    { text: "Waking up to physical warmth and closeness", scores: {W:0,T:3,Ti:0,G:0,A:0} },
+    { text: "A full day dedicated completely to you", scores: {W:0,T:0,Ti:3,G:0,A:0} },
+    { text: "A perfectly chosen gift they saved up for", scores: {W:0,T:0,Ti:0,G:3,A:0} }
+  ]},
+  { text: "Which of these do you secretly crave most?", opts: [
+    { text: "Being told you're enough, you're loved, you matter", scores: {W:3,T:0,Ti:0,G:0,A:0} },
+    { text: "Constant small physical reminders they're there", scores: {W:0,T:3,Ti:0,G:0,A:0} },
+    { text: "Being someone's first choice for time", scores: {W:0,T:0,Ti:3,G:0,A:0} },
+    { text: "Gestures that prove they were thinking of you", scores: {W:0,T:0,Ti:0,G:2,A:1} }
+  ]},
+  { text: "What makes you feel taken for granted?", opts: [
+    { text: "Efforts going unnoticed and unacknowledged verbally", scores: {W:3,T:0,Ti:0,G:0,A:0} },
+    { text: "Being in the same room but untouched for days", scores: {W:0,T:3,Ti:0,G:0,A:0} },
+    { text: "Partner choosing screens over spending time with me", scores: {W:0,T:0,Ti:3,G:0,A:0} },
+    { text: "Zero effort — no surprises, nothing to show they care", scores: {W:0,T:0,Ti:0,G:1,A:2} }
+  ]},
+  { text: "Which text would move you the most?", opts: [
+    { text: "'You are one of the best things in my life'", scores: {W:3,T:0,Ti:0,G:0,A:0} },
+    { text: "'I just want to hold you right now'", scores: {W:0,T:3,Ti:0,G:0,A:0} },
+    { text: "'Let's spend the whole weekend together, just us'", scores: {W:0,T:0,Ti:3,G:0,A:0} },
+    { text: "'I saw this and immediately thought of you'", scores: {W:0,T:0,Ti:0,G:3,A:0} }
+  ]},
+  { text: "In an argument, what helps you feel reconnected?", opts: [
+    { text: "Hearing genuine 'I'm sorry, I love you'", scores: {W:3,T:0,Ti:0,G:0,A:0} },
+    { text: "A hug that lasts long enough to mean something", scores: {W:0,T:3,Ti:0,G:0,A:0} },
+    { text: "Sitting together quietly, just being present", scores: {W:0,T:0,Ti:3,G:0,A:0} },
+    { text: "Them doing something kind without being asked", scores: {W:0,T:0,Ti:0,G:0,A:3} }
+  ]},
+  { text: "Which statement resonates most?", opts: [
+    { text: "'I need to hear that I am loved and valued'", scores: {W:3,T:0,Ti:0,G:0,A:0} },
+    { text: "'A touch says more than any word ever could'", scores: {W:0,T:3,Ti:0,G:0,A:0} },
+    { text: "'Give me your full presence, not just your presence'", scores: {W:0,T:0,Ti:3,G:0,A:0} },
+    { text: "'Show me you were thinking of me when I wasn't there'", scores: {W:0,T:0,Ti:0,G:3,A:0} }
+  ]}
+];
+const results = {
+  W: { type:"Words of Affirmation", emoji:"💬", color:"#c0845a", tagBg:"rgba(192,132,90,0.15)", tagColor:"#8a5a2a",
+    subtitle:"You feel loved when you're told so — clearly and often.",
+    sections:[
+      { icon:"💛", title:"Who you are", text:"You are someone who deeply values language. Verbal expressions of love, appreciation, and encouragement aren't just nice to have — they are how you feel truly seen. A heartfelt message can stay with you for weeks. Silence, on the other hand, can feel like indifference." },
+      { icon:"💬", title:"In relationships", text:"You thrive with partners who are expressive. You need to hear 'I love you', 'I appreciate you', 'You mean a lot to me' — genuinely and regularly. It's not neediness; it's how you experience love. Written notes, sincere texts, and verbal acknowledgment all fill your tank." },
+      { icon:"⚡", title:"Your challenge", text:"Partners who show love through action but rarely speak it can feel emotionally cold to you, even if they're devoted. Learning to recognize love in non-verbal forms — while also clearly communicating your needs — is your growth edge." },
+      { icon:"🔮", title:"What helps you thrive", text:"A partner who expresses themselves freely. Regular, genuine affirmations. Letters, voice notes, heartfelt compliments. Being asked how you're feeling — and actually listened to." }
+    ]},
+  T: { type:"Physical Touch", emoji:"🤝", color:"#9e7a7a", tagBg:"rgba(158,122,122,0.15)", tagColor:"#7a4a4a",
+    subtitle:"For you, love lives in the body — in warmth, closeness, and presence.",
+    sections:[
+      { icon:"🧡", title:"Who you are", text:"Touch is your primary language of love and safety. A hand on your shoulder, a long hug, someone leaning into you — these speak louder than any words. Physical presence isn't just comfort; it's connection." },
+      { icon:"🤝", title:"In relationships", text:"You need a partner who is physically affectionate — not just in intimate moments, but constantly. Hand-holding while walking, sitting close on the couch, a spontaneous hug. Without regular touch, you can start to feel disconnected even in a loving relationship." },
+      { icon:"⚡", title:"Your challenge", text:"Partners who are less touch-oriented may feel you're 'too needy' physically — while you feel starved of connection. Communicating this clearly, and understanding that different people have different comfort levels with touch, is essential." },
+      { icon:"🔮", title:"What helps you thrive", text:"A physically warm partner. Regular non-sexual affection. Being held when you're sad. A partner who reaches for your hand first sometimes." }
+    ]},
+  Ti: { type:"Quality Time", emoji:"⏳", color:"#7a9e8e", tagBg:"rgba(122,158,142,0.15)", tagColor:"#4a7a6a",
+    subtitle:"Your love language is undivided attention — being someone's whole focus.",
+    sections:[
+      { icon:"💚", title:"Who you are", text:"You don't need grand gestures. You need presence. When someone gives you their full, undistracted attention, you feel deeply loved. Shared experiences — even simple ones — create your strongest memories and bonds." },
+      { icon:"⏳", title:"In relationships", text:"You feel closest to partners who put their phone down, look you in the eye, and choose you deliberately. Being constantly interrupted, or having a partner who is physically present but mentally elsewhere, is one of the most painful things for you." },
+      { icon:"⚡", title:"Your challenge", text:"In modern life, true presence is rare. You may need to clearly ask for it rather than hoping a partner intuitively offers it. You may also need to examine whether you're giving the same quality of attention you're asking for." },
+      { icon:"🔮", title:"What helps you thrive", text:"Phone-free time together. Planned dates that are genuinely about connection. A partner who listens with their whole self. Adventures and shared experiences you can look back on." }
+    ]},
+  G: { type:"Receiving Gifts", emoji:"🎁", color:"#8a7a9e", tagBg:"rgba(138,122,158,0.15)", tagColor:"#5a4a7a",
+    subtitle:"You feel loved when someone shows they were thinking of you.",
+    sections:[
+      { icon:"💜", title:"Who you are", text:"For you, gifts aren't about materialism — they're about thoughtfulness. When someone picks something specifically because it reminded them of you, it says: 'You exist in my mind even when you're not in front of me.' That means everything." },
+      { icon:"🎁", title:"In relationships", text:"You feel most loved by partners who notice the small things you mention and remember them. A book by your favorite author, a snack you mentioned once, a small surprise on a random Tuesday — these land deeper than expensive gestures." },
+      { icon:"⚡", title:"Your challenge", text:"Some partners may see gift-giving as superficial or unnecessary. Understanding that your need is about thoughtfulness, not material things — and communicating this difference — can bridge the gap. It's not about money, it's about 'I was thinking of you'." },
+      { icon:"🔮", title:"What helps you thrive", text:"A partner who pays attention to what you like. Surprise gestures that prove you're on their mind. Meaningful tokens over expensive ones. Knowing they thought of you when you weren't there." }
+    ]},
+  A: { type:"Acts of Service", emoji:"🛠️", color:"#7a9e6e", tagBg:"rgba(122,158,110,0.15)", tagColor:"#4a7a3a",
+    subtitle:"Love, to you, is shown through action — doing, not just saying.",
+    sections:[
+      { icon:"💚", title:"Who you are", text:"You believe actions speak louder than words. When someone does something to make your life easier — without being asked — it communicates love more powerfully than any declaration. You notice effort, and it moves you deeply." },
+      { icon:"🛠️", title:"In relationships", text:"You feel loved when a partner handles something you were stressed about, makes your coffee without asking, or takes something off your plate. Consistent, thoughtful effort in daily life is your love language. Words alone, without follow-through, ring hollow." },
+      { icon:"⚡", title:"Your challenge", text:"If your partner's love language is words or time, they may feel confused when acts of service don't seem to land for them the way they do for you. And if no one is 'doing' enough, you may feel unloved even in a relationship full of verbal affection." },
+      { icon:"🔮", title:"What helps you thrive", text:"A partner who shows up in practical ways. Someone who notices what you need before you ask. Consistency in effort over time. Feeling like a team — especially in the hard moments." }
+    ]}
+};
+
+let current = 0;
+let answers = new Array(questions.length).fill(null);
+
+function render() {
+  const q = questions[current];
+  document.getElementById('qNum').textContent = 'Question ' + (current+1);
+  document.getElementById('qText').textContent = q.text;
+  document.getElementById('progressText').textContent = 'Question ' + (current+1) + ' of ' + questions.length;
+  const pct = Math.round((current / questions.length) * 100);
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('btnBack').style.display = current > 0 ? 'block' : 'none';
+  const wrap = document.getElementById('optionsWrap');
+  wrap.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt' + (answers[current] === i ? ' selected' : '');
+    btn.textContent = opt.text;
+    btn.onclick = () => selectOpt(i);
+    wrap.appendChild(btn);
+  });
+  const next = document.getElementById('btnNext');
+  next.textContent = current === questions.length - 1 ? 'See My Result ✦' : 'Continue →';
+  next.className = 'btn-next' + (answers[current] !== null ? ' active' : '');
+}
+
+function selectOpt(i) {
+  answers[current] = i;
+  document.querySelectorAll('.opt').forEach((b, idx) => b.classList.toggle('selected', idx === i));
+  document.getElementById('btnNext').classList.add('active');
+}
+
+function goNext() {
+  if (answers[current] === null) return;
+  if (current < questions.length - 1) {
+    current++;
+    render();
+    document.querySelector('.card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else { showResult(); }
+}
+
+function goBack() {
+  if (current > 0) { current--; render(); }
+}
+
+function showResult() {
+  const totals = {};
+  Object.keys(results).forEach(k => totals[k] = 0);
+  answers.forEach((ans, qi) => {
+    if (ans !== null) {
+      const scores = questions[qi].opts[ans].scores;
+      Object.keys(scores).forEach(k => totals[k] = (totals[k]||0) + scores[k]);
+    }
+  });
+  const winner = Object.keys(totals).reduce((a,b) => totals[a] > totals[b] ? a : b);
+  const r = results[winner];
+  const total = Object.values(totals).reduce((a,b) => a+b, 0) || 1;
+  document.getElementById('progressText').textContent = 'Complete!';
+  document.getElementById('progressPct').textContent = '100%';
+  document.getElementById('progressFill').style.width = '100%';
+  const card = document.getElementById('quizCard');
+  card.innerHTML = `
+    <div class="result-box">
+      <div class="result-type-tag" style="background:${r.tagBg};color:${r.tagColor};">${r.emoji} ${r.type}</div>
+      <div class="result-title" style="color:${r.color}">${r.emoji} ${r.type}</div>
+      <div class="result-subtitle">${r.subtitle}</div>
+      <div class="scores">
+        ${Object.entries(totals).map(([k,v]) => `
+          <div class="score-row">
+            <div class="score-label"><span>${results[k].emoji} ${results[k].type}</span><span>${Math.round((v/total)*100)}%</span></div>
+            <div class="score-bar"><div class="score-fill" style="width:${Math.round((v/total)*100)}%;background:${results[k].color}"></div></div>
+          </div>`).join('')}
+      </div>
+      <div class="detail-sections">
+        ${r.sections.map(s => `<div class="detail-card"><h3>${s.icon} ${s.title}</h3><p>${s.text}</p></div>`).join('')}
+      </div>
+      <button class="share-btn" onclick="shareResult('${r.type}','${r.emoji}','${r.subtitle}')">📤 Share My Result</button>
+      <button class="retake-btn" onclick="retake()">↩ Retake Quiz</button>
+      <a class="home-btn" href="index.html">← Explore More Quizzes</a>
+    </div>`;
+}
+
+function shareResult(type, emoji, subtitle) {
+  const text = emoji + ' My result: ' + type + '\n"' + subtitle + '"\n\nFind out yours 👉 ' + window.location.href;
+  if (navigator.share) navigator.share({ title: 'My Quiz Result', text });
+  else navigator.clipboard.writeText(text).then(() => alert('Result copied! Share it 🎉'));
+}
+
+function retake() {
+  current = 0;
+  answers = new Array(questions.length).fill(null);
+  document.getElementById('quizCard').innerHTML = `
+    <div class="question-num" id="qNum"></div>
+    <div class="question-text" id="qText"></div>
+    <div class="options" id="optionsWrap"></div>
+    <div class="nav-row">
+      <button class="btn-back" id="btnBack" onclick="goBack()" style="display:none">← Back</button>
+      <button class="btn-next" id="btnNext" onclick="goNext()">Continue →</button>
+    </div>`;
+  render();
+}
+
+render();
+
+</script>
+</body>
+</html>

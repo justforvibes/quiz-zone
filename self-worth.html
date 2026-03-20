@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Self-Worth Level Quiz — Know Yourself</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600;1,400&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f5f0eb; --card: #fffdf9; --border: #e2d9ce;
+      --text: #2c2416; --muted: #9a8f82; --accent: #c0845a;
+      --accent2: #7a9e8e; --soft: #e8ddd4;
+    }
+    body { background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 16px 80px; }
+    .wrap { position:relative;z-index:1;width:100%;max-width:580px; }
+    header { text-align:center;margin-bottom:36px; }
+    .back-link { display:inline-block;margin-bottom:24px;color:var(--accent);font-size:13px;text-decoration:none; }
+    .back-link:hover { text-decoration:underline; }
+    .tag { display:inline-block;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:14px; }
+    h1 { font-family:'Lora',serif;font-size:clamp(1.8rem,5vw,2.6rem);font-weight:600;line-height:1.2;color:var(--text); }
+    header p { margin-top:12px;color:var(--muted);font-size:14px;font-weight:300;line-height:1.6; }
+    .progress-wrap { margin-bottom:28px; }
+    .progress-label { display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:8px; }
+    .progress-bar { height:4px;background:var(--soft);border-radius:100px;overflow:hidden; }
+    .progress-fill { height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:100px;transition:width 0.4s ease; }
+    .card { background:var(--card);border:1px solid var(--border);border-radius:24px;padding:32px 28px;box-shadow:0 4px 24px rgba(192,132,90,0.08); }
+    .question-num { font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:10px; }
+    .question-text { font-family:'Lora',serif;font-size:1.15rem;font-weight:600;line-height:1.5;color:var(--text);margin-bottom:24px; }
+    .options { display:flex;flex-direction:column;gap:10px; }
+    .opt { padding:14px 18px;border-radius:14px;border:1.5px solid var(--border);background:transparent;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;text-align:left;cursor:pointer;transition:all 0.2s;line-height:1.5; }
+    .opt:hover { border-color:var(--accent);background:rgba(192,132,90,0.06); }
+    .opt.selected { border-color:var(--accent);background:rgba(192,132,90,0.1); }
+    .nav-row { display:flex;gap:10px;margin-top:24px; }
+    .btn-back { padding:12px 20px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Nunito',sans-serif;font-size:14px;cursor:pointer;transition:all 0.2s; }
+    .btn-back:hover { border-color:var(--accent);color:var(--text); }
+    .btn-next { flex:1;padding:14px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:'Lora',serif;font-size:15px;font-style:italic;cursor:pointer;transition:opacity 0.2s,transform 0.15s;opacity:0.4;pointer-events:none; }
+    .btn-next.active { opacity:1;pointer-events:all; }
+    .btn-next.active:hover { opacity:0.9;transform:translateY(-1px); }
+    .result-box { animation:fadeUp 0.6s ease; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .result-type-tag { display:inline-block;padding:6px 18px;border-radius:100px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px; }
+    .result-title { font-family:'Lora',serif;font-size:clamp(1.6rem,6vw,2.4rem);font-weight:600;line-height:1.2;margin-bottom:8px; }
+    .result-subtitle { font-size:14px;color:var(--muted);margin-bottom:24px;font-style:italic; }
+    .scores { margin-bottom:28px;display:flex;flex-direction:column;gap:12px; }
+    .score-row { }
+    .score-label { display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px; }
+    .score-bar { height:6px;background:var(--soft);border-radius:100px;overflow:hidden; }
+    .score-fill { height:100%;border-radius:100px;transition:width 1s ease; }
+    .detail-sections { display:flex;flex-direction:column;gap:16px;margin-bottom:24px; }
+    .detail-card { background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:18px 20px; }
+    .detail-card h3 { font-family:'Lora',serif;font-size:0.95rem;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px; }
+    .detail-card p { font-size:13px;color:var(--muted);line-height:1.8; }
+    .share-btn { width:100%;padding:14px;border-radius:12px;border:none;background:var(--accent2);color:#fff;font-family:'Lora',serif;font-size:15px;font-style:italic;cursor:pointer;transition:opacity 0.2s;margin-bottom:12px; }
+    .share-btn:hover { opacity:0.9; }
+    .retake-btn { width:100%;padding:14px;border-radius:12px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-family:'Nunito',sans-serif;font-size:14px;cursor:pointer;transition:all 0.2s;margin-bottom:12px; }
+    .retake-btn:hover { background:rgba(192,132,90,0.08); }
+    .home-btn { width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Nunito',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s;text-decoration:none;display:block;text-align:center; }
+    .home-btn:hover { border-color:var(--accent);color:var(--text); }
+    footer { margin-top:40px;text-align:center;color:var(--muted);font-size:12px; }
+    footer a { color:var(--accent);text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back-link" href="index.html">← All Quizzes</a>
+  <header>
+    <div class="tag">✨ Self-Worth</div>
+    <h1>Self-Worth Level Quiz</h1>
+    <p>How much do you truly value yourself? Not what you perform — what your patterns actually reveal.</p>
+  </header>
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span id="progressText">Question 1 of 12</span>
+      <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+  <div class="card" id="quizCard">
+    <div class="question-num" id="qNum"></div>
+    <div class="question-text" id="qText"></div>
+    <div class="options" id="optionsWrap"></div>
+    <div class="nav-row">
+      <button class="btn-back" id="btnBack" onclick="goBack()" style="display:none">← Back</button>
+      <button class="btn-next" id="btnNext" onclick="goNext()">Continue →</button>
+    </div>
+  </div>
+  <footer>Made with 💗 by <a href="https://justforvibes.github.io">JustForVibes</a> · For self-reflection, not clinical diagnosis.</footer>
+</div>
+<script>
+const questions = [
+  { text: "When someone compliments you sincerely, you...", opts: [
+    { text: "Receive it warmly — I know I have value", scores: {So:3,Co:0,Ex:0,Pe:0} },
+    { text: "Feel uncomfortable and deflect or minimise it", scores: {So:0,Co:3,Ex:0,Pe:0} },
+    { text: "Accept it externally but don't fully believe it", scores: {So:0,Co:0,Ex:3,Pe:0} },
+    { text: "Wonder what they want from me", scores: {So:0,Co:0,Ex:0,Pe:3} }
+  ]},
+  { text: "When you make a mistake, your internal response is...", opts: [
+    { text: "Acknowledge it, learn, and move on", scores: {So:3,Co:0,Ex:0,Pe:0} },
+    { text: "Punish myself with prolonged guilt or shame", scores: {So:0,Co:3,Ex:0,Pe:0} },
+    { text: "It depends on who's watching — I hate being seen failing", scores: {So:0,Co:0,Ex:3,Pe:0} },
+    { text: "Immediately wonder if others will use it against me", scores: {So:0,Co:0,Ex:0,Pe:3} }
+  ]},
+  { text: "How does your self-worth typically change based on others' opinions?", opts: [
+    { text: "Mostly it doesn't — I have a stable sense of self", scores: {So:3,Co:0,Ex:0,Pe:0} },
+    { text: "A lot — criticism cuts deep and praise doesn't last long", scores: {So:0,Co:3,Ex:0,Pe:0} },
+    { text: "It rises with praise and falls with criticism more than I'd like", scores: {So:0,Co:0,Ex:3,Pe:0} },
+    { text: "I'm wary of both — praise might be manipulation", scores: {So:0,Co:0,Ex:0,Pe:3} }
+  ]},
+  { text: "Do you find it easy to say no to people?", opts: [
+    { text: "Yes — I respect my own limits and communicate them", scores: {So:3,Co:0,Ex:0,Pe:0} },
+    { text: "No — saying no feels like I'm letting people down", scores: {So:0,Co:3,Ex:0,Pe:0} },
+    { text: "Sometimes — depends on whether I fear losing their approval", scores: {So:0,Co:0,Ex:3,Pe:0} },
+    { text: "I often say yes to stay in control of what people think of me", scores: {So:0,Co:0,Ex:0,Pe:3} }
+  ]},
+  { text: "How do you feel about taking up space — in conversations, rooms, decisions?", opts: [
+    { text: "Comfortable — I have a right to be here", scores: {So:3,Co:0,Ex:0,Pe:0} },
+    { text: "Uncomfortable — I often feel like I'm too much or not enough", scores: {So:0,Co:3,Ex:0,Pe:0} },
+    { text: "Comfortable if I feel I've earned it", scores: {So:0,Co:0,Ex:3,Pe:0} },
+    { text: "Cautious — I'd rather observe until I know it's safe", scores: {So:0,Co:0,Ex:0,Pe:3} }
+  ]},
+  { text: "When you achieve something significant, you feel...", opts: [
+    { text: "Proud — I worked hard and I deserve this", scores: {So:3,Co:0,Ex:0,Pe:0} },
+    { text: "Briefly happy, then already looking for the next thing to prove", scores: {So:0,Co:3,Ex:0,Pe:0} },
+    { text: "Good mostly because of others' recognition of it", scores: {So:0,Co:0,Ex:3,Pe:0} },
+    { text: "Surprised — I'm never quite sure I deserved it", scores: {So:0,Co:0,Ex:0,Pe:3} }
+  ]},
+  { text: "In relationships, you tend to believe...", opts: [
+    { text: "I am worthy of love as I am — without earning it", scores: {So:3,Co:0,Ex:0,Pe:0} },
+    { text: "I have to be a good enough version of myself to deserve love", scores: {So:0,Co:3,Ex:0,Pe:0} },
+    { text: "I'm lovable when I'm successful, attractive, or performing well", scores: {So:0,Co:0,Ex:3,Pe:0} },
+    { text: "I should be cautious — love often comes with conditions", scores: {So:0,Co:0,Ex:0,Pe:3} }
+  ]},
+  { text: "How often do you compare yourself to others?", opts: [
+    { text: "Rarely — I run my own race", scores: {So:3,Co:0,Ex:0,Pe:0} },
+    { text: "Often — and I almost always come up short", scores: {So:0,Co:3,Ex:0,Pe:0} },
+    { text: "Regularly — I use comparison to measure my worth", scores: {So:0,Co:0,Ex:3,Pe:0} },
+    { text: "Sometimes — mainly to figure out if I'm being naive or gullible", scores: {So:0,Co:0,Ex:0,Pe:3} }
+  ]},
+  { text: "Which statement best describes your relationship with yourself?", opts: [
+    { text: "I am generally kind to myself — I try to be my own friend", scores: {So:3,Co:0,Ex:0,Pe:0} },
+    { text: "I am my own harshest critic — I hold myself to impossible standards", scores: {So:0,Co:3,Ex:0,Pe:0} },
+    { text: "My relationship with myself depends a lot on how I'm doing externally", scores: {So:0,Co:0,Ex:3,Pe:0} },
+    { text: "I keep myself at a safe distance — self-reflection feels risky", scores: {So:0,Co:0,Ex:0,Pe:3} }
+  ]},
+  { text: "When you imagine your ideal self, you feel...", opts: [
+    { text: "Motivated — I accept where I am while growing", scores: {So:3,Co:0,Ex:0,Pe:0} },
+    { text: "Inadequate — I am so far from who I should be", scores: {So:0,Co:3,Ex:0,Pe:0} },
+    { text: "Pressured — I need to become that person for others to value me", scores: {So:0,Co:0,Ex:3,Pe:0} },
+    { text: "Uncertain — I'm not sure what I even want for myself", scores: {So:0,Co:0,Ex:0,Pe:3} }
+  ]},
+  { text: "Do you believe you are inherently worthy — regardless of what you do or how you look?", opts: [
+    { text: "Yes, genuinely", scores: {So:3,Co:0,Ex:0,Pe:0} },
+    { text: "I want to believe it but it doesn't feel true most days", scores: {So:0,Co:3,Ex:0,Pe:0} },
+    { text: "Only when I'm performing well or meeting expectations", scores: {So:0,Co:0,Ex:3,Pe:0} },
+    { text: "I rarely think about inherent worth — existence feels conditional", scores: {So:0,Co:0,Ex:0,Pe:3} }
+  ]},
+  { text: "Which resonates most deeply?", opts: [
+    { text: "'I know who I am — and I'm enough'", scores: {So:3,Co:0,Ex:0,Pe:0} },
+    { text: "'I am never quite good enough — no matter what I do'", scores: {So:0,Co:3,Ex:0,Pe:0} },
+    { text: "'My worth lives in what others think of me'", scores: {So:0,Co:0,Ex:3,Pe:0} },
+    { text: "'Worth is something I'm still trying to understand for myself'", scores: {So:0,Co:0,Ex:0,Pe:3} }
+  ]}
+];
+const results = {
+  So: { type:"Solid Self-Worth", emoji:"🌟", color:"#7a9e8e", tagBg:"rgba(122,158,142,0.15)", tagColor:"#4a7a6a",
+    subtitle:"You know who you are — and you don't need others to confirm it.",
+    sections:[
+      { icon:"💚", title:"Who you are", text:"You have developed a stable, internalized sense of your own value. Not arrogance — just a quiet groundedness. Your worth doesn't collapse when someone criticizes you or inflate when you receive praise. You exist with a baseline of self-acceptance that many people spend their whole lives trying to build." },
+      { icon:"🌟", title:"In relationships", text:"You attract and maintain healthier relationships because you don't tolerate what you don't deserve, and you don't cling to what isn't good for you. You're able to give without losing yourself. You communicate your needs without excessive guilt. People feel safe with you because you feel safe with yourself." },
+      { icon:"⚡", title:"Your challenge", text:"Even solid self-worth has edges. You may at times struggle with imposter syndrome, perfectionism, or difficulty accepting help. There's always more depth to self-understanding. The invitation now is to extend the same compassion you offer yourself to others who are still finding their footing." },
+      { icon:"🔮", title:"What helps you thrive", text:"Relationships of mutual respect. Continued self-reflection and growth. Using your groundedness to model healthy relating for others. Celebrating not just achievements, but simply being." }
+    ]},
+  Co: { type:"Conditional Self-Worth", emoji:"⚖️", color:"#c0845a", tagBg:"rgba(192,132,90,0.15)", tagColor:"#8a5a2a",
+    subtitle:"You have worth — but deep down, you feel like you have to keep proving it.",
+    sections:[
+      { icon:"🧡", title:"Who you are", text:"Your self-worth is real but fragile. It fluctuates with your performance, your productivity, how others treat you, how you look, or how well you're doing. You may have grown up in an environment where love was conditional — so you learned to earn your value rather than simply have it." },
+      { icon:"⚖️", title:"In relationships", text:"You may give too much, tolerate too much, or stay too long — all in service of maintaining the feeling of being 'good enough'. Criticism hits harder than it should. You may struggle to rest, celebrate, or simply be without the backdrop of productivity or achievement." },
+      { icon:"⚡", title:"Your challenge", text:"Uncoupling your worth from what you do, produce, or achieve. This is subtle, deep work — because the conditional worth belief is often completely unconscious. It formed early. Healing it requires consistently choosing to believe you are enough in the moments you feel least like you are." },
+      { icon:"🔮", title:"What helps you thrive", text:"Self-compassion practices. Therapy that targets core beliefs about worthiness. Relationships where you are valued for being, not just doing. Giving yourself permission to rest — fully — without guilt." }
+    ]},
+  Ex: { type:"Externally-Dependent Worth", emoji:"🪞", color:"#8a7a9e", tagBg:"rgba(138,122,158,0.15)", tagColor:"#5a4a7a",
+    subtitle:"Your sense of value is held in other people's hands — and it's exhausting.",
+    sections:[
+      { icon:"💜", title:"Who you are", text:"Your self-worth is real, but it lives outside of you. In others' approval, admiration, validation, likes, praise. When people think well of you, you feel worthy. When they don't — or when you imagine they don't — the floor drops. This creates a constant, low-level search for external confirmation." },
+      { icon:"🪞", title:"In relationships", text:"You may unconsciously seek partners or friends who provide consistent affirmation. Conflict, criticism, or withdrawal can feel existentially threatening — not just emotionally painful. You may shape yourself to what others want, losing track of who you actually are in the process." },
+      { icon:"⚡", title:"Your challenge", text:"Building an internal source of worth that doesn't require constant top-ups from outside. This is one of the deepest self-development challenges — because the external world is always available and the internal world requires patient cultivation. It begins with asking: 'What do I think of myself?'" },
+      { icon:"🔮", title:"What helps you thrive", text:"Time alone to rediscover your own values, opinions, and preferences. Journaling. Therapy focused on identity and self-concept. Relationships where you practice expressing yourself authentically, without first calculating how it will be received." }
+    ]},
+  Pe: { type:"Protective Worth Armor", emoji:"🛡️", color:"#9e8a7a", tagBg:"rgba(158,138,122,0.15)", tagColor:"#6a4a3a",
+    subtitle:"You've built your worth into a fortress — protected from damage, but also from connection.",
+    sections:[
+      { icon:"❤️", title:"Who you are", text:"You have developed a form of self-worth that is heavily defended. Not because you feel good about yourself, but because feeling too exposed, too hopeful, or too trusting has led to pain before. So you protect your sense of self by staying guarded, skeptical, and self-reliant. It looks like confidence. It's often armor." },
+      { icon:"🛡️", title:"In relationships", text:"You may come across as self-assured or even slightly withdrawn. You keep your vulnerabilities hidden. Deep intimacy can feel threatening — because real connection requires lowering the guard that keeps you safe. You may unconsciously reject love before it can reject you." },
+      { icon:"⚡", title:"Your challenge", text:"Recognising that the armor is costing you connection. True self-worth is not defended — it doesn't need to be. It simply is. The work is gradually, safely lowering the walls — not all at once, not with everyone, but enough to let in the people who have genuinely earned it." },
+      { icon:"🔮", title:"What helps you thrive", text:"A therapist who is patient and consistent. A few deeply trustworthy people you allow in fully. Practices of vulnerability in low-stakes situations. Learning to distinguish between self-protection and self-isolation." }
+    ]}
+};
+
+let current = 0;
+let answers = new Array(questions.length).fill(null);
+
+function render() {
+  const q = questions[current];
+  document.getElementById('qNum').textContent = 'Question ' + (current+1);
+  document.getElementById('qText').textContent = q.text;
+  document.getElementById('progressText').textContent = 'Question ' + (current+1) + ' of ' + questions.length;
+  const pct = Math.round((current / questions.length) * 100);
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('btnBack').style.display = current > 0 ? 'block' : 'none';
+  const wrap = document.getElementById('optionsWrap');
+  wrap.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt' + (answers[current] === i ? ' selected' : '');
+    btn.textContent = opt.text;
+    btn.onclick = () => selectOpt(i);
+    wrap.appendChild(btn);
+  });
+  const next = document.getElementById('btnNext');
+  next.textContent = current === questions.length - 1 ? 'See My Result ✦' : 'Continue →';
+  next.className = 'btn-next' + (answers[current] !== null ? ' active' : '');
+}
+
+function selectOpt(i) {
+  answers[current] = i;
+  document.querySelectorAll('.opt').forEach((b, idx) => b.classList.toggle('selected', idx === i));
+  document.getElementById('btnNext').classList.add('active');
+}
+
+function goNext() {
+  if (answers[current] === null) return;
+  if (current < questions.length - 1) {
+    current++;
+    render();
+    document.querySelector('.card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else { showResult(); }
+}
+
+function goBack() {
+  if (current > 0) { current--; render(); }
+}
+
+function showResult() {
+  const totals = {};
+  Object.keys(results).forEach(k => totals[k] = 0);
+  answers.forEach((ans, qi) => {
+    if (ans !== null) {
+      const scores = questions[qi].opts[ans].scores;
+      Object.keys(scores).forEach(k => totals[k] = (totals[k]||0) + scores[k]);
+    }
+  });
+  const winner = Object.keys(totals).reduce((a,b) => totals[a] > totals[b] ? a : b);
+  const r = results[winner];
+  const total = Object.values(totals).reduce((a,b) => a+b, 0) || 1;
+  document.getElementById('progressText').textContent = 'Complete!';
+  document.getElementById('progressPct').textContent = '100%';
+  document.getElementById('progressFill').style.width = '100%';
+  const card = document.getElementById('quizCard');
+  card.innerHTML = `
+    <div class="result-box">
+      <div class="result-type-tag" style="background:${r.tagBg};color:${r.tagColor};">${r.emoji} ${r.type}</div>
+      <div class="result-title" style="color:${r.color}">${r.emoji} ${r.type}</div>
+      <div class="result-subtitle">${r.subtitle}</div>
+      <div class="scores">
+        ${Object.entries(totals).map(([k,v]) => `
+          <div class="score-row">
+            <div class="score-label"><span>${results[k].emoji} ${results[k].type}</span><span>${Math.round((v/total)*100)}%</span></div>
+            <div class="score-bar"><div class="score-fill" style="width:${Math.round((v/total)*100)}%;background:${results[k].color}"></div></div>
+          </div>`).join('')}
+      </div>
+      <div class="detail-sections">
+        ${r.sections.map(s => `<div class="detail-card"><h3>${s.icon} ${s.title}</h3><p>${s.text}</p></div>`).join('')}
+      </div>
+      <button class="share-btn" onclick="shareResult('${r.type}','${r.emoji}','${r.subtitle}')">📤 Share My Result</button>
+      <button class="retake-btn" onclick="retake()">↩ Retake Quiz</button>
+      <a class="home-btn" href="index.html">← Explore More Quizzes</a>
+    </div>`;
+}
+
+function shareResult(type, emoji, subtitle) {
+  const text = emoji + ' My result: ' + type + '\n"' + subtitle + '"\n\nFind out yours 👉 ' + window.location.href;
+  if (navigator.share) navigator.share({ title: 'My Quiz Result', text });
+  else navigator.clipboard.writeText(text).then(() => alert('Result copied! Share it 🎉'));
+}
+
+function retake() {
+  current = 0;
+  answers = new Array(questions.length).fill(null);
+  document.getElementById('quizCard').innerHTML = `
+    <div class="question-num" id="qNum"></div>
+    <div class="question-text" id="qText"></div>
+    <div class="options" id="optionsWrap"></div>
+    <div class="nav-row">
+      <button class="btn-back" id="btnBack" onclick="goBack()" style="display:none">← Back</button>
+      <button class="btn-next" id="btnNext" onclick="goNext()">Continue →</button>
+    </div>`;
+  render();
+}
+
+render();
+
+</script>
+</body>
+</html>

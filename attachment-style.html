@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Attachment Style Quiz — Know Yourself</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600;1,400&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f5f0eb; --card: #fffdf9; --border: #e2d9ce;
+      --text: #2c2416; --muted: #9a8f82; --accent: #c0845a;
+      --accent2: #7a9e8e; --soft: #e8ddd4;
+    }
+    body { background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 16px 80px; }
+    .wrap { position:relative;z-index:1;width:100%;max-width:580px; }
+    header { text-align:center;margin-bottom:36px; }
+    .back-link { display:inline-block;margin-bottom:24px;color:var(--accent);font-size:13px;text-decoration:none; }
+    .back-link:hover { text-decoration:underline; }
+    .tag { display:inline-block;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:14px; }
+    h1 { font-family:'Lora',serif;font-size:clamp(1.8rem,5vw,2.6rem);font-weight:600;line-height:1.2;color:var(--text); }
+    header p { margin-top:12px;color:var(--muted);font-size:14px;font-weight:300;line-height:1.6; }
+    .progress-wrap { margin-bottom:28px; }
+    .progress-label { display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:8px; }
+    .progress-bar { height:4px;background:var(--soft);border-radius:100px;overflow:hidden; }
+    .progress-fill { height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:100px;transition:width 0.4s ease; }
+    .card { background:var(--card);border:1px solid var(--border);border-radius:24px;padding:32px 28px;box-shadow:0 4px 24px rgba(192,132,90,0.08); }
+    .question-num { font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:10px; }
+    .question-text { font-family:'Lora',serif;font-size:1.15rem;font-weight:600;line-height:1.5;color:var(--text);margin-bottom:24px; }
+    .options { display:flex;flex-direction:column;gap:10px; }
+    .opt { padding:14px 18px;border-radius:14px;border:1.5px solid var(--border);background:transparent;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;text-align:left;cursor:pointer;transition:all 0.2s;line-height:1.5; }
+    .opt:hover { border-color:var(--accent);background:rgba(192,132,90,0.06); }
+    .opt.selected { border-color:var(--accent);background:rgba(192,132,90,0.1); }
+    .nav-row { display:flex;gap:10px;margin-top:24px; }
+    .btn-back { padding:12px 20px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Nunito',sans-serif;font-size:14px;cursor:pointer;transition:all 0.2s; }
+    .btn-back:hover { border-color:var(--accent);color:var(--text); }
+    .btn-next { flex:1;padding:14px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:'Lora',serif;font-size:15px;font-style:italic;cursor:pointer;transition:opacity 0.2s,transform 0.15s;opacity:0.4;pointer-events:none; }
+    .btn-next.active { opacity:1;pointer-events:all; }
+    .btn-next.active:hover { opacity:0.9;transform:translateY(-1px); }
+    .result-box { animation:fadeUp 0.6s ease; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .result-type-tag { display:inline-block;padding:6px 18px;border-radius:100px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px; }
+    .result-title { font-family:'Lora',serif;font-size:clamp(1.6rem,6vw,2.4rem);font-weight:600;line-height:1.2;margin-bottom:8px; }
+    .result-subtitle { font-size:14px;color:var(--muted);margin-bottom:24px;font-style:italic; }
+    .scores { margin-bottom:28px;display:flex;flex-direction:column;gap:12px; }
+    .score-row { }
+    .score-label { display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px; }
+    .score-bar { height:6px;background:var(--soft);border-radius:100px;overflow:hidden; }
+    .score-fill { height:100%;border-radius:100px;transition:width 1s ease; }
+    .detail-sections { display:flex;flex-direction:column;gap:16px;margin-bottom:24px; }
+    .detail-card { background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:18px 20px; }
+    .detail-card h3 { font-family:'Lora',serif;font-size:0.95rem;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px; }
+    .detail-card p { font-size:13px;color:var(--muted);line-height:1.8; }
+    .share-btn { width:100%;padding:14px;border-radius:12px;border:none;background:var(--accent2);color:#fff;font-family:'Lora',serif;font-size:15px;font-style:italic;cursor:pointer;transition:opacity 0.2s;margin-bottom:12px; }
+    .share-btn:hover { opacity:0.9; }
+    .retake-btn { width:100%;padding:14px;border-radius:12px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-family:'Nunito',sans-serif;font-size:14px;cursor:pointer;transition:all 0.2s;margin-bottom:12px; }
+    .retake-btn:hover { background:rgba(192,132,90,0.08); }
+    .home-btn { width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Nunito',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s;text-decoration:none;display:block;text-align:center; }
+    .home-btn:hover { border-color:var(--accent);color:var(--text); }
+    footer { margin-top:40px;text-align:center;color:var(--muted);font-size:12px; }
+    footer a { color:var(--accent);text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back-link" href="index.html">← All Quizzes</a>
+  <header>
+    <div class="tag">🌿 Attachment Style</div>
+    <h1>Attachment Style Quiz</h1>
+    <p>Are you Secure, Anxious, Avoidant, or Fearful-Avoidant? Discover the deep pattern behind how you love.</p>
+  </header>
+  <div class="progress-wrap">
+    <div class="progress-label"><span id="progressText">Question 1 of 12</span><span id="progressPct">0%</span></div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+  <div class="card" id="quizCard">
+    <div class="question-num" id="qNum"></div>
+    <div class="question-text" id="qText"></div>
+    <div class="options" id="optionsWrap"></div>
+    <div class="nav-row">
+      <button class="btn-back" id="btnBack" onclick="goBack()" style="display:none">← Back</button>
+      <button class="btn-next" id="btnNext" onclick="goNext()">Continue →</button>
+    </div>
+  </div>
+  <footer>Made with 💗 by <a href="https://justforvibes.github.io">JustForVibes</a> · For self-reflection, not clinical diagnosis.</footer>
+</div>
+<script>
+const questions = [
+  { text: "When someone you like doesn't text back for a few hours, you usually...", opts: [
+    { text: "Assume they're busy and go about my day", scores: {S:3,A:0,V:0,F:0} },
+    { text: "Start wondering if I said something wrong", scores: {S:0,A:3,V:0,F:1} },
+    { text: "Feel relieved — I needed space anyway", scores: {S:0,A:0,V:3,F:0} },
+    { text: "Feel anxious but also want to pull away first", scores: {S:0,A:1,V:1,F:3} }
+  ]},
+  { text: "In a relationship, emotional intimacy feels...", opts: [
+    { text: "Natural and something I welcome", scores: {S:3,A:0,V:0,F:0} },
+    { text: "Necessary — I need to feel deeply connected", scores: {S:0,A:3,V:0,F:0} },
+    { text: "Uncomfortable — I prefer keeping things light", scores: {S:0,A:0,V:3,F:0} },
+    { text: "Desirable but also terrifying", scores: {S:0,A:1,V:1,F:3} }
+  ]},
+  { text: "When a partner wants more space or alone time, you...", opts: [
+    { text: "Respect it without overthinking", scores: {S:3,A:0,V:0,F:0} },
+    { text: "Feel worried they're losing interest in me", scores: {S:0,A:3,V:0,F:1} },
+    { text: "Feel grateful — I understand that need deeply", scores: {S:0,A:0,V:3,F:0} },
+    { text: "Panic but then push them away before they can", scores: {S:0,A:0,V:0,F:3} }
+  ]},
+  { text: "How do you usually handle conflict in relationships?", opts: [
+    { text: "Talk it out calmly — communication is key", scores: {S:3,A:0,V:0,F:0} },
+    { text: "Get emotional and need resolution quickly", scores: {S:0,A:3,V:0,F:0} },
+    { text: "Go quiet and need time alone to process", scores: {S:0,A:0,V:3,F:0} },
+    { text: "Freeze — fight or flee, both happen", scores: {S:0,A:1,V:1,F:3} }
+  ]},
+  { text: "When a relationship is going really well, you feel...", opts: [
+    { text: "Happy and present — I enjoy it fully", scores: {S:3,A:0,V:0,F:0} },
+    { text: "Happy but anxious it might end soon", scores: {S:0,A:3,V:0,F:1} },
+    { text: "A bit suffocated — I need to pull back", scores: {S:0,A:0,V:3,F:0} },
+    { text: "Waiting for the other shoe to drop", scores: {S:0,A:1,V:0,F:3} }
+  ]},
+  { text: "How often do you need reassurance from a partner?", opts: [
+    { text: "Rarely — I trust them unless given reason not to", scores: {S:3,A:0,V:0,F:0} },
+    { text: "Often — I need to hear that things are okay", scores: {S:0,A:3,V:0,F:0} },
+    { text: "Never — I prefer not depending on anyone", scores: {S:0,A:0,V:3,F:0} },
+    { text: "Sometimes, but asking feels like weakness", scores: {S:0,A:1,V:1,F:3} }
+  ]},
+  { text: "When you meet someone new and interesting, you tend to...", opts: [
+    { text: "Open up gradually at a comfortable pace", scores: {S:3,A:0,V:0,F:0} },
+    { text: "Become quickly invested and think about them a lot", scores: {S:0,A:3,V:0,F:0} },
+    { text: "Keep walls up — I don't rush intimacy", scores: {S:0,A:0,V:3,F:0} },
+    { text: "Feel excited then suddenly pull back for no reason", scores: {S:0,A:0,V:1,F:3} }
+  ]},
+  { text: "Your biggest fear in a relationship is...", opts: [
+    { text: "Not having one — I'm generally not relationship-fearful", scores: {S:3,A:0,V:0,F:0} },
+    { text: "Being abandoned or left without warning", scores: {S:0,A:3,V:0,F:1} },
+    { text: "Losing my independence and sense of self", scores: {S:0,A:0,V:3,F:0} },
+    { text: "Both — being abandoned AND being trapped", scores: {S:0,A:1,V:1,F:3} }
+  ]},
+  { text: "How do you respond when a partner expresses deep love or commitment?", opts: [
+    { text: "I feel happy and reciprocate genuinely", scores: {S:3,A:0,V:0,F:0} },
+    { text: "It makes me feel secure but I need more over time", scores: {S:0,A:3,V:0,F:0} },
+    { text: "I feel overwhelmed and need to create distance", scores: {S:0,A:0,V:3,F:0} },
+    { text: "I feel touched but immediately distrust it", scores: {S:0,A:0,V:0,F:3} }
+  ]},
+  { text: "After an argument, your first instinct is to...", opts: [
+    { text: "Take a breath, then reconnect when calm", scores: {S:3,A:0,V:0,F:0} },
+    { text: "Seek immediate resolution — distance is unbearable", scores: {S:0,A:3,V:0,F:0} },
+    { text: "Withdraw and process alone for days", scores: {S:0,A:0,V:3,F:0} },
+    { text: "Alternate between wanting to fix it and running away", scores: {S:0,A:1,V:1,F:3} }
+  ]},
+  { text: "How do you feel about depending on others emotionally?", opts: [
+    { text: "It's healthy — humans need each other", scores: {S:3,A:0,V:0,F:0} },
+    { text: "I depend on people a lot — maybe too much", scores: {S:0,A:3,V:0,F:0} },
+    { text: "I avoid it — self-reliance is my default", scores: {S:0,A:0,V:3,F:0} },
+    { text: "I want to but it feels dangerous to trust fully", scores: {S:0,A:1,V:1,F:3} }
+  ]},
+  { text: "Which statement resonates most with you?", opts: [
+    { text: "'I'm comfortable with closeness and also with being alone'", scores: {S:3,A:0,V:0,F:0} },
+    { text: "'I love deeply but always worry it won't last'", scores: {S:0,A:3,V:0,F:0} },
+    { text: "'I work best when I have plenty of space'", scores: {S:0,A:0,V:3,F:0} },
+    { text: "'I want love but somehow always sabotage it'", scores: {S:0,A:0,V:0,F:3} }
+  ]}
+];
+const results = {
+  S: { type:"Secure", emoji:"🌿", color:"#7a9e8e", tagBg:"rgba(122,158,142,0.15)", tagColor:"#4a7a6a",
+    subtitle:"You love with warmth and without losing yourself.",
+    sections:[
+      { icon:"💚", title:"Who you are", text:"You have a healthy, balanced approach to love and connection. You're comfortable with intimacy but don't lose yourself in it. You trust others reasonably, communicate openly, and handle conflict without falling apart. Most people feel safe and at ease around you." },
+      { icon:"🌱", title:"In relationships", text:"You're able to give and receive love naturally. You don't need constant reassurance, and when conflicts arise, you address them calmly. You support your partner's independence while also nurturing closeness. You're the kind of person others feel lucky to have." },
+      { icon:"⚡", title:"Your challenge", text:"Secure attachment doesn't mean perfect. You may sometimes struggle to understand why others seem so complicated. Learning to hold space for others' wounds — without fixing them — is your growth edge." },
+      { icon:"🔮", title:"What helps you thrive", text:"Honest, open communication. Partners who match your emotional maturity. Relationships where both people feel free to be themselves. You don't need games — you need genuine connection." }
+    ]},
+  A: { type:"Anxious", emoji:"🌊", color:"#c0845a", tagBg:"rgba(192,132,90,0.15)", tagColor:"#8a5a2a",
+    subtitle:"You love deeply — sometimes more than feels safe.",
+    sections:[
+      { icon:"🧡", title:"Who you are", text:"You feel emotions deeply and love with your whole heart. But that intensity comes with a shadow: you often fear it won't last. You look for signs that something is wrong, even when it isn't. You crave closeness but worry that needing it so much is too much." },
+      { icon:"🌊", title:"In relationships", text:"You're a devoted, caring partner — but you need consistent reassurance to feel safe. Unanswered messages trigger your mind. Silences feel like rejection. You may become clingy, or push for more commitment than the relationship is ready for." },
+      { icon:"⚡", title:"Your challenge", text:"Learning to self-soothe — to trust that silence doesn't mean abandonment. Your anxiety often drives the very distance you fear. Recognising the pattern is the first step to breaking it." },
+      { icon:"🔮", title:"What helps you thrive", text:"A partner who communicates consistently. Therapy or journaling to process fear. Practicing sitting with uncertainty. You don't need less love — you need safer love." }
+    ]},
+  V: { type:"Avoidant", emoji:"🧊", color:"#8a7a9e", tagBg:"rgba(138,122,158,0.15)", tagColor:"#5a4a7a",
+    subtitle:"You protect yourself — sometimes from the very things you need.",
+    sections:[
+      { icon:"💜", title:"Who you are", text:"You value your independence above almost everything else. You've learned that relying on others leads to disappointment. So you built walls. You're self-sufficient, capable, and often seen as 'mysterious'. It's not that you don't feel — it's that feeling is scary." },
+      { icon:"🧊", title:"In relationships", text:"You want connection but pull back when it gets real. When someone gets too close, something inside you wants to run. You minimize your needs, dismiss emotional conversations, and often feel more comfortable alone than vulnerable." },
+      { icon:"⚡", title:"Your challenge", text:"Letting people in — even just a little. Your walls were built for protection, but they now block the connection you quietly crave. Vulnerability is not weakness." },
+      { icon:"🔮", title:"What helps you thrive", text:"A patient partner who doesn't pressure you. Slow, gradual intimacy. Understanding your emotional patterns through reflection. Recognizing that needing someone doesn't mean losing yourself." }
+    ]},
+  F: { type:"Fearful-Avoidant", emoji:"🌪️", color:"#9e7a7a", tagBg:"rgba(158,122,122,0.15)", tagColor:"#7a4a4a",
+    subtitle:"You want love deeply — and fear it just as deeply.",
+    sections:[
+      { icon:"❤️", title:"Who you are", text:"You carry both worlds inside you: the longing for deep connection, and the terror of what happens when you let people in. This is the most complex attachment style — sometimes called 'disorganized'. You didn't choose this; it usually comes from early experiences where love felt unsafe." },
+      { icon:"🌪️", title:"In relationships", text:"You push and pull. When someone comes close, you panic and retreat. When they give you space, you fear they're leaving. You may sabotage good relationships without knowing why. You crave intimacy but experience it as threatening." },
+      { icon:"⚡", title:"Your challenge", text:"Learning to tolerate closeness without the nervous system going into overdrive. This often requires working through past patterns with a therapist or through deep self-work. You deserve consistency — and it starts with offering it to yourself." },
+      { icon:"🔮", title:"What helps you thrive", text:"A safe, consistent partner. Therapy — especially trauma-informed approaches. Building self-trust and self-compassion. You are not broken. You are healing." }
+    ]}
+};
+
+let current = 0;
+let answers = new Array(questions.length).fill(null);
+
+function render() {
+  const q = questions[current];
+  document.getElementById('qNum').textContent = 'Question ' + (current+1);
+  document.getElementById('qText').textContent = q.text;
+  document.getElementById('progressText').textContent = 'Question ' + (current+1) + ' of ' + questions.length;
+  const pct = Math.round((current / questions.length) * 100);
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('btnBack').style.display = current > 0 ? 'block' : 'none';
+  const wrap = document.getElementById('optionsWrap');
+  wrap.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt' + (answers[current] === i ? ' selected' : '');
+    btn.textContent = opt.text;
+    btn.onclick = () => selectOpt(i);
+    wrap.appendChild(btn);
+  });
+  const next = document.getElementById('btnNext');
+  next.textContent = current === questions.length - 1 ? 'See My Result ✦' : 'Continue →';
+  next.className = 'btn-next' + (answers[current] !== null ? ' active' : '');
+}
+
+function selectOpt(i) {
+  answers[current] = i;
+  document.querySelectorAll('.opt').forEach((b, idx) => b.classList.toggle('selected', idx === i));
+  document.getElementById('btnNext').classList.add('active');
+}
+
+function goNext() {
+  if (answers[current] === null) return;
+  if (current < questions.length - 1) {
+    current++;
+    render();
+    document.querySelector('.card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else { showResult(); }
+}
+
+function goBack() {
+  if (current > 0) { current--; render(); }
+}
+
+function showResult() {
+  const totals = {};
+  Object.keys(results).forEach(k => totals[k] = 0);
+  answers.forEach((ans, qi) => {
+    if (ans !== null) {
+      const scores = questions[qi].opts[ans].scores;
+      Object.keys(scores).forEach(k => totals[k] = (totals[k]||0) + scores[k]);
+    }
+  });
+  const winner = Object.keys(totals).reduce((a,b) => totals[a] > totals[b] ? a : b);
+  const r = results[winner];
+  const total = Object.values(totals).reduce((a,b) => a+b, 0) || 1;
+  document.getElementById('progressText').textContent = 'Complete!';
+  document.getElementById('progressPct').textContent = '100%';
+  document.getElementById('progressFill').style.width = '100%';
+  const card = document.getElementById('quizCard');
+  card.innerHTML = `
+    <div class="result-box">
+      <div class="result-type-tag" style="background:${r.tagBg};color:${r.tagColor};">${r.emoji} ${r.type}</div>
+      <div class="result-title" style="color:${r.color}">${r.emoji} ${r.type}</div>
+      <div class="result-subtitle">${r.subtitle}</div>
+      <div class="scores">
+        ${Object.entries(totals).map(([k,v]) => `
+          <div class="score-row">
+            <div class="score-label"><span>${results[k].emoji} ${results[k].type}</span><span>${Math.round((v/total)*100)}%</span></div>
+            <div class="score-bar"><div class="score-fill" style="width:${Math.round((v/total)*100)}%;background:${results[k].color}"></div></div>
+          </div>`).join('')}
+      </div>
+      <div class="detail-sections">
+        ${r.sections.map(s => `<div class="detail-card"><h3>${s.icon} ${s.title}</h3><p>${s.text}</p></div>`).join('')}
+      </div>
+      <button class="share-btn" onclick="shareResult('${r.type}','${r.emoji}','${r.subtitle}')">📤 Share My Result</button>
+      <button class="retake-btn" onclick="retake()">↩ Retake Quiz</button>
+      <a class="home-btn" href="index.html">← Explore More Quizzes</a>
+    </div>`;
+}
+
+function shareResult(type, emoji, subtitle) {
+  const text = emoji + ' My result: ' + type + '\\n"' + subtitle + '"\\n\\nFind out yours 👉 ' + window.location.href;
+  if (navigator.share) navigator.share({ title: 'My Quiz Result', text });
+  else navigator.clipboard.writeText(text).then(() => alert('Result copied! Share it 🎉'));
+}
+
+function retake() {
+  current = 0;
+  answers = new Array(questions.length).fill(null);
+  document.getElementById('quizCard').innerHTML = `
+    <div class="question-num" id="qNum"></div>
+    <div class="question-text" id="qText"></div>
+    <div class="options" id="optionsWrap"></div>
+    <div class="nav-row">
+      <button class="btn-back" id="btnBack" onclick="goBack()" style="display:none">← Back</button>
+      <button class="btn-next" id="btnNext" onclick="goNext()">Continue →</button>
+    </div>`;
+  render();
+}
+
+render();
+
+</script>
+</body>
+</html>

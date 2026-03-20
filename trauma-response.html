@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Trauma Response Style Quiz — Know Yourself</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600;1,400&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f5f0eb; --card: #fffdf9; --border: #e2d9ce;
+      --text: #2c2416; --muted: #9a8f82; --accent: #c0845a;
+      --accent2: #7a9e8e; --soft: #e8ddd4;
+    }
+    body { background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 16px 80px; }
+    .wrap { position:relative;z-index:1;width:100%;max-width:580px; }
+    header { text-align:center;margin-bottom:36px; }
+    .back-link { display:inline-block;margin-bottom:24px;color:var(--accent);font-size:13px;text-decoration:none; }
+    .back-link:hover { text-decoration:underline; }
+    .tag { display:inline-block;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:14px; }
+    h1 { font-family:'Lora',serif;font-size:clamp(1.8rem,5vw,2.6rem);font-weight:600;line-height:1.2;color:var(--text); }
+    header p { margin-top:12px;color:var(--muted);font-size:14px;font-weight:300;line-height:1.6; }
+    .progress-wrap { margin-bottom:28px; }
+    .progress-label { display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:8px; }
+    .progress-bar { height:4px;background:var(--soft);border-radius:100px;overflow:hidden; }
+    .progress-fill { height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:100px;transition:width 0.4s ease; }
+    .card { background:var(--card);border:1px solid var(--border);border-radius:24px;padding:32px 28px;box-shadow:0 4px 24px rgba(192,132,90,0.08); }
+    .question-num { font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:10px; }
+    .question-text { font-family:'Lora',serif;font-size:1.15rem;font-weight:600;line-height:1.5;color:var(--text);margin-bottom:24px; }
+    .options { display:flex;flex-direction:column;gap:10px; }
+    .opt { padding:14px 18px;border-radius:14px;border:1.5px solid var(--border);background:transparent;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;text-align:left;cursor:pointer;transition:all 0.2s;line-height:1.5; }
+    .opt:hover { border-color:var(--accent);background:rgba(192,132,90,0.06); }
+    .opt.selected { border-color:var(--accent);background:rgba(192,132,90,0.1); }
+    .nav-row { display:flex;gap:10px;margin-top:24px; }
+    .btn-back { padding:12px 20px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Nunito',sans-serif;font-size:14px;cursor:pointer;transition:all 0.2s; }
+    .btn-back:hover { border-color:var(--accent);color:var(--text); }
+    .btn-next { flex:1;padding:14px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:'Lora',serif;font-size:15px;font-style:italic;cursor:pointer;transition:opacity 0.2s,transform 0.15s;opacity:0.4;pointer-events:none; }
+    .btn-next.active { opacity:1;pointer-events:all; }
+    .btn-next.active:hover { opacity:0.9;transform:translateY(-1px); }
+    .result-box { animation:fadeUp 0.6s ease; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .result-type-tag { display:inline-block;padding:6px 18px;border-radius:100px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px; }
+    .result-title { font-family:'Lora',serif;font-size:clamp(1.6rem,6vw,2.4rem);font-weight:600;line-height:1.2;margin-bottom:8px; }
+    .result-subtitle { font-size:14px;color:var(--muted);margin-bottom:24px;font-style:italic; }
+    .scores { margin-bottom:28px;display:flex;flex-direction:column;gap:12px; }
+    .score-row { }
+    .score-label { display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px; }
+    .score-bar { height:6px;background:var(--soft);border-radius:100px;overflow:hidden; }
+    .score-fill { height:100%;border-radius:100px;transition:width 1s ease; }
+    .detail-sections { display:flex;flex-direction:column;gap:16px;margin-bottom:24px; }
+    .detail-card { background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:18px 20px; }
+    .detail-card h3 { font-family:'Lora',serif;font-size:0.95rem;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px; }
+    .detail-card p { font-size:13px;color:var(--muted);line-height:1.8; }
+    .share-btn { width:100%;padding:14px;border-radius:12px;border:none;background:var(--accent2);color:#fff;font-family:'Lora',serif;font-size:15px;font-style:italic;cursor:pointer;transition:opacity 0.2s;margin-bottom:12px; }
+    .share-btn:hover { opacity:0.9; }
+    .retake-btn { width:100%;padding:14px;border-radius:12px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-family:'Nunito',sans-serif;font-size:14px;cursor:pointer;transition:all 0.2s;margin-bottom:12px; }
+    .retake-btn:hover { background:rgba(192,132,90,0.08); }
+    .home-btn { width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Nunito',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s;text-decoration:none;display:block;text-align:center; }
+    .home-btn:hover { border-color:var(--accent);color:var(--text); }
+    footer { margin-top:40px;text-align:center;color:var(--muted);font-size:12px; }
+    footer a { color:var(--accent);text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back-link" href="index.html">← All Quizzes</a>
+  <header>
+    <div class="tag">🛡️ Trauma Response</div>
+    <h1>Trauma Response Style Quiz</h1>
+    <p>Discover the survival pattern your nervous system learned — Fight, Flight, Freeze, or Fawn.</p>
+  </header>
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span id="progressText">Question 1 of 12</span>
+      <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+  <div class="card" id="quizCard">
+    <div class="question-num" id="qNum"></div>
+    <div class="question-text" id="qText"></div>
+    <div class="options" id="optionsWrap"></div>
+    <div class="nav-row">
+      <button class="btn-back" id="btnBack" onclick="goBack()" style="display:none">← Back</button>
+      <button class="btn-next" id="btnNext" onclick="goNext()">Continue →</button>
+    </div>
+  </div>
+  <footer>Made with 💗 by <a href="https://justforvibes.github.io">JustForVibes</a> · For self-reflection, not clinical diagnosis.</footer>
+</div>
+<script>
+const questions = [
+  { text: "When you sense conflict approaching, your body's first response is...", opts: [
+    { text: "Tense up and prepare to argue or defend", scores: {Fi:3,Fl:0,Fr:0,Fa:0} },
+    { text: "Want to get away from the situation immediately", scores: {Fi:0,Fl:3,Fr:0,Fa:0} },
+    { text: "Go completely blank — mind empties", scores: {Fi:0,Fl:0,Fr:3,Fa:0} },
+    { text: "Immediately try to smooth things over", scores: {Fi:0,Fl:0,Fr:0,Fa:3} }
+  ]},
+  { text: "Under stress, you are most likely to...", opts: [
+    { text: "Get angry or frustrated easily", scores: {Fi:3,Fl:0,Fr:0,Fa:0} },
+    { text: "Withdraw and isolate yourself", scores: {Fi:0,Fl:3,Fr:0,Fa:0} },
+    { text: "Feel numb, foggy, or paralyzed", scores: {Fi:0,Fl:0,Fr:3,Fa:0} },
+    { text: "Put others' needs above my own to reduce tension", scores: {Fi:0,Fl:0,Fr:0,Fa:3} }
+  ]},
+  { text: "When someone upsets you, your default is to...", opts: [
+    { text: "Confront them directly — I don't let things slide", scores: {Fi:3,Fl:0,Fr:0,Fa:0} },
+    { text: "Distance myself and avoid them", scores: {Fi:0,Fl:3,Fr:0,Fa:0} },
+    { text: "Say nothing and shut down internally", scores: {Fi:0,Fl:0,Fr:3,Fa:0} },
+    { text: "Apologize even when it isn't my fault", scores: {Fi:0,Fl:0,Fr:0,Fa:3} }
+  ]},
+  { text: "In a scary or threatening situation, you typically...", opts: [
+    { text: "Stand your ground and face it head-on", scores: {Fi:3,Fl:0,Fr:0,Fa:0} },
+    { text: "Look for an exit immediately", scores: {Fi:0,Fl:3,Fr:0,Fa:0} },
+    { text: "Freeze and can't move or think clearly", scores: {Fi:0,Fl:0,Fr:3,Fa:0} },
+    { text: "Try to de-escalate and make everyone calm", scores: {Fi:0,Fl:0,Fr:0,Fa:3} }
+  ]},
+  { text: "In relationships, when tension rises you most naturally...", opts: [
+    { text: "Push to resolve it right now", scores: {Fi:3,Fl:0,Fr:0,Fa:0} },
+    { text: "Need space and time away to recover", scores: {Fi:0,Fl:3,Fr:0,Fa:0} },
+    { text: "Disconnect emotionally and go through motions", scores: {Fi:0,Fl:0,Fr:3,Fa:0} },
+    { text: "Become very accommodating to reduce the discomfort", scores: {Fi:0,Fl:0,Fr:0,Fa:3} }
+  ]},
+  { text: "People who know you well might say you tend to be...", opts: [
+    { text: "Intense, passionate, and direct — even aggressive sometimes", scores: {Fi:3,Fl:0,Fr:0,Fa:0} },
+    { text: "Independent, private, and hard to pin down", scores: {Fi:0,Fl:3,Fr:0,Fa:0} },
+    { text: "Quiet, withdrawn, or checked out under pressure", scores: {Fi:0,Fl:0,Fr:3,Fa:0} },
+    { text: "Very agreeable, helpful — sometimes too agreeable", scores: {Fi:0,Fl:0,Fr:0,Fa:3} }
+  ]},
+  { text: "When you feel unsafe, your body response is...", opts: [
+    { text: "Heart races, jaw clenches, I want to act", scores: {Fi:3,Fl:0,Fr:0,Fa:0} },
+    { text: "Heart races, I want to leave or hide", scores: {Fi:0,Fl:3,Fr:0,Fa:0} },
+    { text: "I go still, dissociate, feel detached from myself", scores: {Fi:0,Fl:0,Fr:3,Fa:0} },
+    { text: "I become very focused on calming others down", scores: {Fi:0,Fl:0,Fr:0,Fa:3} }
+  ]},
+  { text: "After a stressful event, you typically...", opts: [
+    { text: "Need to vent or talk it through with intensity", scores: {Fi:3,Fl:0,Fr:0,Fa:0} },
+    { text: "Need solitude and quiet to recover", scores: {Fi:0,Fl:3,Fr:0,Fa:0} },
+    { text: "Feel exhausted, foggy, or emotionally flat", scores: {Fi:0,Fl:0,Fr:3,Fa:0} },
+    { text: "Check on everyone else before checking on myself", scores: {Fi:0,Fl:0,Fr:0,Fa:3} }
+  ]},
+  { text: "In group conflicts, you are most likely to...", opts: [
+    { text: "Voice your opinion loudly and defend a position", scores: {Fi:3,Fl:0,Fr:0,Fa:0} },
+    { text: "Leave the group or remove yourself", scores: {Fi:0,Fl:3,Fr:0,Fa:0} },
+    { text: "Go silent and internally shut down", scores: {Fi:0,Fl:0,Fr:3,Fa:0} },
+    { text: "Try to mediate and make peace for everyone", scores: {Fi:0,Fl:0,Fr:0,Fa:3} }
+  ]},
+  { text: "Which childhood pattern sounds most familiar?", opts: [
+    { text: "Had to fight for my needs to be heard or met", scores: {Fi:3,Fl:0,Fr:0,Fa:0} },
+    { text: "Learned it was safer to stay invisible or small", scores: {Fi:0,Fl:3,Fr:0,Fa:0} },
+    { text: "Emotionally shut down to survive unpredictable environments", scores: {Fi:0,Fl:0,Fr:3,Fa:0} },
+    { text: "Had to keep the peace and manage others' emotions", scores: {Fi:0,Fl:0,Fr:0,Fa:3} }
+  ]},
+  { text: "When you experience something overwhelming, you...", opts: [
+    { text: "Externalise — express outward emotion", scores: {Fi:3,Fl:0,Fr:0,Fa:0} },
+    { text: "Escape — find somewhere or something to retreat to", scores: {Fi:0,Fl:3,Fr:0,Fa:0} },
+    { text: "Internalise and disconnect — numbness is familiar", scores: {Fi:0,Fl:0,Fr:3,Fa:0} },
+    { text: "Focus on others — their calm makes me feel safer", scores: {Fi:0,Fl:0,Fr:0,Fa:3} }
+  ]},
+  { text: "Which statement resonates most with your survival pattern?", opts: [
+    { text: "'I fight because it's the only way to not be invisible'", scores: {Fi:3,Fl:0,Fr:0,Fa:0} },
+    { text: "'I run because staying has never felt safe'", scores: {Fi:0,Fl:3,Fr:0,Fa:0} },
+    { text: "'I freeze because sometimes there's just nothing left'", scores: {Fi:0,Fl:0,Fr:3,Fa:0} },
+    { text: "'I please because my safety depended on others being okay'", scores: {Fi:0,Fl:0,Fr:0,Fa:3} }
+  ]}
+];
+const results = {
+  Fi: { type:"Fight Response", emoji:"🔥", color:"#c0845a", tagBg:"rgba(192,132,90,0.15)", tagColor:"#8a5a2a",
+    subtitle:"You face threats head-on — even when the threat isn't real anymore.",
+    sections:[
+      { icon:"🧡", title:"Who you are", text:"Your nervous system learned early that the best protection is offense. When you feel threatened — emotionally, physically, or interpersonally — you move toward the danger and confront it. This made you resilient. But it can also make you reactive in situations that aren't actually dangerous." },
+      { icon:"🔥", title:"In relationships", text:"You argue to feel safe. Conflict doesn't scare you — being ignored or dismissed does. You fight for what you believe in. The problem is that your nervous system can interpret a partner's mild frustration as a full threat, escalating situations that could have been resolved quietly." },
+      { icon:"⚡", title:"Your challenge", text:"Learning to distinguish real threats from perceived ones. Your body fires the same alarm for a raised voice as it would for genuine danger. Pausing — physically, even briefly — before responding can change the entire trajectory of a conflict." },
+      { icon:"🔮", title:"What helps you thrive", text:"Physical outlets for the activation in your body — exercise, movement. A safe relationship where conflict is healthy, not dangerous. Therapy to process what originally made fighting feel necessary. Knowing that you can be fierce and soft at the same time." }
+    ]},
+  Fl: { type:"Flight Response", emoji:"🌬️", color:"#7a9e8e", tagBg:"rgba(122,158,142,0.15)", tagColor:"#4a7a6a",
+    subtitle:"You stay safe by staying moving — physically or mentally.",
+    sections:[
+      { icon:"💚", title:"Who you are", text:"Your nervous system learned that the safest option is to leave. Not always physically — sometimes it's emotional disappearance, workaholism, keeping yourself constantly busy, or withdrawing from intimacy just as it gets close. Movement is your protection." },
+      { icon:"🌬️", title:"In relationships", text:"You may be seen as commitment-averse, emotionally unavailable, or hard to pin down. In reality, you're not running from the person — you're running from the feeling of being trapped or overwhelmed. But to your partner, the effect is the same: you leave when they need you most." },
+      { icon:"⚡", title:"Your challenge", text:"Learning to stay. Not because leaving is wrong, but because your flight response activates even in situations that are safe. Sitting with discomfort — in small doses, with supportive people — gradually teaches the nervous system that staying is survivable." },
+      { icon:"🔮", title:"What helps you thrive", text:"A patient, non-chasing partner. Slow, gradual intimacy-building. Therapy to understand what you've been running from. Nature, movement, solo time — but with intentional return. Knowing that home can be a person, not just a place you escape to." }
+    ]},
+  Fr: { type:"Freeze Response", emoji:"🧊", color:"#8a7a9e", tagBg:"rgba(138,122,158,0.15)", tagColor:"#5a4a7a",
+    subtitle:"When overwhelmed, you go still — and wait for it to pass.",
+    sections:[
+      { icon:"💜", title:"Who you are", text:"Your nervous system's survival strategy is stillness. When threat is unavoidable and too overwhelming to fight or flee, the system shuts down — you go blank, dissociate, feel numb, or become physically unable to move or speak. This is not weakness; it's ancient protection." },
+      { icon:"🧊", title:"In relationships", text:"During conflict, you may shut down completely — unable to respond, speak, or engage. This is often misread as indifference, stonewalling, or not caring. In reality, your system is overwhelmed. The absence of reaction is a reaction — of a nervous system that is completely flooded." },
+      { icon:"⚡", title:"Your challenge", text:"Learning to come back into the body gently when the freeze sets in. Grounding techniques — breathing, touching something cold, naming what you can see — can interrupt the dissociation. Communicating to partners: 'I'm overwhelmed, not checked out' can prevent deep misunderstandings." },
+      { icon:"🔮", title:"What helps you thrive", text:"Somatic therapy or body-based healing practices. A patient partner who understands the freeze response. Predictable, safe environments. Learning that your voice matters and is safe to use. Gradual re-engagement with your own emotional experiences." }
+    ]},
+  Fa: { type:"Fawn Response", emoji:"🕊️", color:"#9e7a9e", tagBg:"rgba(158,122,158,0.15)", tagColor:"#6a3a6a",
+    subtitle:"You learned that keeping others happy was the key to your safety.",
+    sections:[
+      { icon:"❤️", title:"Who you are", text:"The fawn response — less known than fight, flight, or freeze — is the pattern of appeasing others to avoid conflict or harm. You learned, probably early, that your safety depended on others being okay. So you became the peacekeeper, the helper, the one who says sorry first." },
+      { icon:"🕊️", title:"In relationships", text:"You are warm, accommodating, and caring. But you may have little idea of what you actually want or need, because you've spent so long attending to others. You may agree when you disagree, stay when you should leave, and apologize for things that aren't your fault." },
+      { icon:"⚡", title:"Your challenge", text:"Discovering your own wants, needs, opinions, and boundaries — and believing they are valid. The fawn response is trained to disappear the self in order to survive. Recovery is the radical act of reappearing — saying no, expressing disagreement, and choosing your own peace." },
+      { icon:"🔮", title:"What helps you thrive", text:"Learning that boundaries keep relationships healthy, not destroy them. Therapy, especially trauma-informed care. A relationship where your needs are invited and valued. Practicing the discomfort of disappointing people — and surviving it." }
+    ]}
+};
+
+let current = 0;
+let answers = new Array(questions.length).fill(null);
+
+function render() {
+  const q = questions[current];
+  document.getElementById('qNum').textContent = 'Question ' + (current+1);
+  document.getElementById('qText').textContent = q.text;
+  document.getElementById('progressText').textContent = 'Question ' + (current+1) + ' of ' + questions.length;
+  const pct = Math.round((current / questions.length) * 100);
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('btnBack').style.display = current > 0 ? 'block' : 'none';
+  const wrap = document.getElementById('optionsWrap');
+  wrap.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt' + (answers[current] === i ? ' selected' : '');
+    btn.textContent = opt.text;
+    btn.onclick = () => selectOpt(i);
+    wrap.appendChild(btn);
+  });
+  const next = document.getElementById('btnNext');
+  next.textContent = current === questions.length - 1 ? 'See My Result ✦' : 'Continue →';
+  next.className = 'btn-next' + (answers[current] !== null ? ' active' : '');
+}
+
+function selectOpt(i) {
+  answers[current] = i;
+  document.querySelectorAll('.opt').forEach((b, idx) => b.classList.toggle('selected', idx === i));
+  document.getElementById('btnNext').classList.add('active');
+}
+
+function goNext() {
+  if (answers[current] === null) return;
+  if (current < questions.length - 1) {
+    current++;
+    render();
+    document.querySelector('.card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else { showResult(); }
+}
+
+function goBack() {
+  if (current > 0) { current--; render(); }
+}
+
+function showResult() {
+  const totals = {};
+  Object.keys(results).forEach(k => totals[k] = 0);
+  answers.forEach((ans, qi) => {
+    if (ans !== null) {
+      const scores = questions[qi].opts[ans].scores;
+      Object.keys(scores).forEach(k => totals[k] = (totals[k]||0) + scores[k]);
+    }
+  });
+  const winner = Object.keys(totals).reduce((a,b) => totals[a] > totals[b] ? a : b);
+  const r = results[winner];
+  const total = Object.values(totals).reduce((a,b) => a+b, 0) || 1;
+  document.getElementById('progressText').textContent = 'Complete!';
+  document.getElementById('progressPct').textContent = '100%';
+  document.getElementById('progressFill').style.width = '100%';
+  const card = document.getElementById('quizCard');
+  card.innerHTML = `
+    <div class="result-box">
+      <div class="result-type-tag" style="background:${r.tagBg};color:${r.tagColor};">${r.emoji} ${r.type}</div>
+      <div class="result-title" style="color:${r.color}">${r.emoji} ${r.type}</div>
+      <div class="result-subtitle">${r.subtitle}</div>
+      <div class="scores">
+        ${Object.entries(totals).map(([k,v]) => `
+          <div class="score-row">
+            <div class="score-label"><span>${results[k].emoji} ${results[k].type}</span><span>${Math.round((v/total)*100)}%</span></div>
+            <div class="score-bar"><div class="score-fill" style="width:${Math.round((v/total)*100)}%;background:${results[k].color}"></div></div>
+          </div>`).join('')}
+      </div>
+      <div class="detail-sections">
+        ${r.sections.map(s => `<div class="detail-card"><h3>${s.icon} ${s.title}</h3><p>${s.text}</p></div>`).join('')}
+      </div>
+      <button class="share-btn" onclick="shareResult('${r.type}','${r.emoji}','${r.subtitle}')">📤 Share My Result</button>
+      <button class="retake-btn" onclick="retake()">↩ Retake Quiz</button>
+      <a class="home-btn" href="index.html">← Explore More Quizzes</a>
+    </div>`;
+}
+
+function shareResult(type, emoji, subtitle) {
+  const text = emoji + ' My result: ' + type + '\n"' + subtitle + '"\n\nFind out yours 👉 ' + window.location.href;
+  if (navigator.share) navigator.share({ title: 'My Quiz Result', text });
+  else navigator.clipboard.writeText(text).then(() => alert('Result copied! Share it 🎉'));
+}
+
+function retake() {
+  current = 0;
+  answers = new Array(questions.length).fill(null);
+  document.getElementById('quizCard').innerHTML = `
+    <div class="question-num" id="qNum"></div>
+    <div class="question-text" id="qText"></div>
+    <div class="options" id="optionsWrap"></div>
+    <div class="nav-row">
+      <button class="btn-back" id="btnBack" onclick="goBack()" style="display:none">← Back</button>
+      <button class="btn-next" id="btnNext" onclick="goNext()">Continue →</button>
+    </div>`;
+  render();
+}
+
+render();
+
+</script>
+</body>
+</html>

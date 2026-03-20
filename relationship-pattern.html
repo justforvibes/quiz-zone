@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Relationship Pattern Quiz — Know Yourself</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600;1,400&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f5f0eb; --card: #fffdf9; --border: #e2d9ce;
+      --text: #2c2416; --muted: #9a8f82; --accent: #c0845a;
+      --accent2: #7a9e8e; --soft: #e8ddd4;
+    }
+    body { background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 16px 80px; }
+    .wrap { position:relative;z-index:1;width:100%;max-width:580px; }
+    header { text-align:center;margin-bottom:36px; }
+    .back-link { display:inline-block;margin-bottom:24px;color:var(--accent);font-size:13px;text-decoration:none; }
+    .back-link:hover { text-decoration:underline; }
+    .tag { display:inline-block;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:14px; }
+    h1 { font-family:'Lora',serif;font-size:clamp(1.8rem,5vw,2.6rem);font-weight:600;line-height:1.2;color:var(--text); }
+    header p { margin-top:12px;color:var(--muted);font-size:14px;font-weight:300;line-height:1.6; }
+    .progress-wrap { margin-bottom:28px; }
+    .progress-label { display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:8px; }
+    .progress-bar { height:4px;background:var(--soft);border-radius:100px;overflow:hidden; }
+    .progress-fill { height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:100px;transition:width 0.4s ease; }
+    .card { background:var(--card);border:1px solid var(--border);border-radius:24px;padding:32px 28px;box-shadow:0 4px 24px rgba(192,132,90,0.08); }
+    .question-num { font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:10px; }
+    .question-text { font-family:'Lora',serif;font-size:1.15rem;font-weight:600;line-height:1.5;color:var(--text);margin-bottom:24px; }
+    .options { display:flex;flex-direction:column;gap:10px; }
+    .opt { padding:14px 18px;border-radius:14px;border:1.5px solid var(--border);background:transparent;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;text-align:left;cursor:pointer;transition:all 0.2s;line-height:1.5; }
+    .opt:hover { border-color:var(--accent);background:rgba(192,132,90,0.06); }
+    .opt.selected { border-color:var(--accent);background:rgba(192,132,90,0.1); }
+    .nav-row { display:flex;gap:10px;margin-top:24px; }
+    .btn-back { padding:12px 20px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Nunito',sans-serif;font-size:14px;cursor:pointer;transition:all 0.2s; }
+    .btn-back:hover { border-color:var(--accent);color:var(--text); }
+    .btn-next { flex:1;padding:14px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:'Lora',serif;font-size:15px;font-style:italic;cursor:pointer;transition:opacity 0.2s,transform 0.15s;opacity:0.4;pointer-events:none; }
+    .btn-next.active { opacity:1;pointer-events:all; }
+    .btn-next.active:hover { opacity:0.9;transform:translateY(-1px); }
+    .result-box { animation:fadeUp 0.6s ease; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .result-type-tag { display:inline-block;padding:6px 18px;border-radius:100px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px; }
+    .result-title { font-family:'Lora',serif;font-size:clamp(1.6rem,6vw,2.4rem);font-weight:600;line-height:1.2;margin-bottom:8px; }
+    .result-subtitle { font-size:14px;color:var(--muted);margin-bottom:24px;font-style:italic; }
+    .scores { margin-bottom:28px;display:flex;flex-direction:column;gap:12px; }
+    .score-row { }
+    .score-label { display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px; }
+    .score-bar { height:6px;background:var(--soft);border-radius:100px;overflow:hidden; }
+    .score-fill { height:100%;border-radius:100px;transition:width 1s ease; }
+    .detail-sections { display:flex;flex-direction:column;gap:16px;margin-bottom:24px; }
+    .detail-card { background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:18px 20px; }
+    .detail-card h3 { font-family:'Lora',serif;font-size:0.95rem;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px; }
+    .detail-card p { font-size:13px;color:var(--muted);line-height:1.8; }
+    .share-btn { width:100%;padding:14px;border-radius:12px;border:none;background:var(--accent2);color:#fff;font-family:'Lora',serif;font-size:15px;font-style:italic;cursor:pointer;transition:opacity 0.2s;margin-bottom:12px; }
+    .share-btn:hover { opacity:0.9; }
+    .retake-btn { width:100%;padding:14px;border-radius:12px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-family:'Nunito',sans-serif;font-size:14px;cursor:pointer;transition:all 0.2s;margin-bottom:12px; }
+    .retake-btn:hover { background:rgba(192,132,90,0.08); }
+    .home-btn { width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Nunito',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s;text-decoration:none;display:block;text-align:center; }
+    .home-btn:hover { border-color:var(--accent);color:var(--text); }
+    footer { margin-top:40px;text-align:center;color:var(--muted);font-size:12px; }
+    footer a { color:var(--accent);text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back-link" href="index.html">← All Quizzes</a>
+  <header>
+    <div class="tag">🔄 Relationship Pattern</div>
+    <h1>Relationship Pattern Quiz</h1>
+    <p>Do you attract the same kinds of people? Discover the unconscious pattern playing out in your love life.</p>
+  </header>
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span id="progressText">Question 1 of 12</span>
+      <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+  <div class="card" id="quizCard">
+    <div class="question-num" id="qNum"></div>
+    <div class="question-text" id="qText"></div>
+    <div class="options" id="optionsWrap"></div>
+    <div class="nav-row">
+      <button class="btn-back" id="btnBack" onclick="goBack()" style="display:none">← Back</button>
+      <button class="btn-next" id="btnNext" onclick="goNext()">Continue →</button>
+    </div>
+  </div>
+  <footer>Made with 💗 by <a href="https://justforvibes.github.io">JustForVibes</a> · For self-reflection, not clinical diagnosis.</footer>
+</div>
+<script>
+const questions = [
+  { text: "Looking back, the people you've been most drawn to romantically tend to be...", opts: [
+    { text: "Emotionally unavailable or hot and cold", scores: {Ch:3,Sa:0,Co:0,He:0} },
+    { text: "Stable but I find them boring after a while", scores: {Ch:0,Sa:3,Co:0,He:0} },
+    { text: "Similar to me in ways that feel comforting — maybe too similar", scores: {Ch:0,Sa:0,Co:3,He:0} },
+    { text: "People I can help, fix, or rescue", scores: {Ch:0,Sa:0,Co:0,He:3} }
+  ]},
+  { text: "What do you find most irresistible in a person?", opts: [
+    { text: "Intensity, mystery, unpredictability", scores: {Ch:3,Sa:0,Co:0,He:0} },
+    { text: "Competence, stability, and being grounded", scores: {Ch:0,Sa:3,Co:0,He:0} },
+    { text: "Familiarity — people who just 'get' me", scores: {Ch:0,Sa:0,Co:3,He:0} },
+    { text: "Vulnerability and potential — people I can see the best in", scores: {Ch:0,Sa:0,Co:0,He:3} }
+  ]},
+  { text: "A recurring complaint from past partners has been...", opts: [
+    { text: "That I was too needy or too intense", scores: {Ch:3,Sa:0,Co:0,He:0} },
+    { text: "That I pulled away when things got too close", scores: {Ch:0,Sa:3,Co:0,He:0} },
+    { text: "That I was too set in my ways or resistant to growth", scores: {Ch:0,Sa:0,Co:3,He:0} },
+    { text: "That I gave too much and neglected myself", scores: {Ch:0,Sa:0,Co:0,He:3} }
+  ]},
+  { text: "When things are going smoothly in a relationship, you often feel...", opts: [
+    { text: "Anxious — waiting for something to go wrong", scores: {Ch:3,Sa:0,Co:0,He:0} },
+    { text: "Suffocated — looking for exits", scores: {Ch:0,Sa:3,Co:0,He:0} },
+    { text: "Content — but occasionally bored", scores: {Ch:0,Sa:0,Co:3,He:0} },
+    { text: "Like I'm not doing enough for them", scores: {Ch:0,Sa:0,Co:0,He:3} }
+  ]},
+  { text: "When a relationship ends, you mostly feel...", opts: [
+    { text: "Devastated — convinced I'll never find that connection again", scores: {Ch:3,Sa:0,Co:0,He:0} },
+    { text: "Relieved — but also guilty about feeling relieved", scores: {Ch:0,Sa:3,Co:0,He:0} },
+    { text: "Unsure what went wrong — it felt so comfortable", scores: {Ch:0,Sa:0,Co:3,He:0} },
+    { text: "Like I failed the other person", scores: {Ch:0,Sa:0,Co:0,He:3} }
+  ]},
+  { text: "In relationships, you tend to need...", opts: [
+    { text: "Constant reassurance and deep emotional intensity", scores: {Ch:3,Sa:0,Co:0,He:0} },
+    { text: "Plenty of independence and personal space", scores: {Ch:0,Sa:3,Co:0,He:0} },
+    { text: "Predictability and security above all", scores: {Ch:0,Sa:0,Co:3,He:0} },
+    { text: "To feel needed and useful to my partner", scores: {Ch:0,Sa:0,Co:0,He:3} }
+  ]},
+  { text: "If a partner becomes distant, you most often...", opts: [
+    { text: "Pursue them harder — the distance makes me need them more", scores: {Ch:3,Sa:0,Co:0,He:0} },
+    { text: "Feel relieved — and mirror the distance", scores: {Ch:0,Sa:3,Co:0,He:0} },
+    { text: "Feel hurt but wait quietly and hope it passes", scores: {Ch:0,Sa:0,Co:3,He:0} },
+    { text: "Ask what I did wrong and try to fix it", scores: {Ch:0,Sa:0,Co:0,He:3} }
+  ]},
+  { text: "What role do you most often play in relationships?", opts: [
+    { text: "The one who loves more and chases connection", scores: {Ch:3,Sa:0,Co:0,He:0} },
+    { text: "The one who needs space and is hard to fully reach", scores: {Ch:0,Sa:3,Co:0,He:0} },
+    { text: "The reliable, steady one — maybe too predictable", scores: {Ch:0,Sa:0,Co:3,He:0} },
+    { text: "The supporter, giver, caretaker", scores: {Ch:0,Sa:0,Co:0,He:3} }
+  ]},
+  { text: "Which pattern do you most recognise in yourself?", opts: [
+    { text: "I attract people who aren't fully available — and try to win them over", scores: {Ch:3,Sa:0,Co:0,He:0} },
+    { text: "I sabotage good relationships because closeness scares me", scores: {Ch:0,Sa:3,Co:0,He:0} },
+    { text: "I stay in relationships long past their expiry date", scores: {Ch:0,Sa:0,Co:3,He:0} },
+    { text: "I lose myself in relationships trying to be what others need", scores: {Ch:0,Sa:0,Co:0,He:3} }
+  ]},
+  { text: "Which quality do you most struggle to tolerate in a partner?", opts: [
+    { text: "Inconsistency — and yet I keep choosing it", scores: {Ch:3,Sa:0,Co:0,He:0} },
+    { text: "Neediness or emotional demands", scores: {Ch:0,Sa:3,Co:0,He:0} },
+    { text: "Unpredictability or instability", scores: {Ch:0,Sa:0,Co:3,He:0} },
+    { text: "Selfishness or taking without giving", scores: {Ch:0,Sa:0,Co:0,He:3} }
+  ]},
+  { text: "What usually ends your relationships?", opts: [
+    { text: "They pull away and I can't handle the uncertainty", scores: {Ch:3,Sa:0,Co:0,He:0} },
+    { text: "I pull away when they get too close", scores: {Ch:0,Sa:3,Co:0,He:0} },
+    { text: "We grow apart — compatibility fades over time", scores: {Ch:0,Sa:0,Co:3,He:0} },
+    { text: "I give everything until I have nothing left", scores: {Ch:0,Sa:0,Co:0,He:3} }
+  ]},
+  { text: "Which statement feels most true?", opts: [
+    { text: "'I am drawn to people who make me work for their love'", scores: {Ch:3,Sa:0,Co:0,He:0} },
+    { text: "'I am drawn to people who need me from a safe distance'", scores: {Ch:0,Sa:3,Co:0,He:0} },
+    { text: "'I stay in familiar dynamics even when they no longer serve me'", scores: {Ch:0,Sa:0,Co:3,He:0} },
+    { text: "'I give everything to relationships hoping love will come back'", scores: {Ch:0,Sa:0,Co:0,He:3} }
+  ]}
+];
+const results = {
+  Ch: { type:"The Chaser", emoji:"🌀", color:"#c0845a", tagBg:"rgba(192,132,90,0.15)", tagColor:"#8a5a2a",
+    subtitle:"You are drawn to the people who are hardest to hold.",
+    sections:[
+      { icon:"🧡", title:"Who you are", text:"You fall for unavailability. The hot-and-cold partner, the one who keeps you guessing, the person who seems just out of reach — these are the ones who feel most magnetic to you. And the more they pull back, the harder you pursue. This is the chaser pattern: love feels real when it's earned." },
+      { icon:"🌀", title:"In relationships", text:"Stable, available partners may feel boring to you — even when they're good people. The drama, the uncertainty, the chase — these create an intensity that feels like love. But it's often anxiety mistaken for passion. You may unconsciously reject what is healthy in pursuit of what is familiar." },
+      { icon:"⚡", title:"Your challenge", text:"Recognising the difference between genuine connection and the chemical rush of pursuit. Safe love doesn't mean boring love. Learning to tolerate — and eventually appreciate — a partner who simply, consistently shows up." },
+      { icon:"🔮", title:"What helps you thrive", text:"Therapy to understand what made unavailability feel like home. Practicing staying with safe people even when the chemistry feels quieter. Learning that consistency is its own form of intensity — it's called security." }
+    ]},
+  Sa: { type:"The Distancer", emoji:"🌬️", color:"#7a9e8e", tagBg:"rgba(122,158,142,0.15)", tagColor:"#4a7a6a",
+    subtitle:"You want connection — but closeness triggers your retreat.",
+    sections:[
+      { icon:"💚", title:"Who you are", text:"You are drawn to relationships but pull back when they get real. Not because you don't care — you may care deeply — but because intimacy activates something that feels threatening. You need space the way others need closeness, and too much of either leaves you uncomfortable." },
+      { icon:"🌬️", title:"In relationships", text:"Partners often describe feeling like they can never fully reach you. You may create emotional distance through busyness, humor, withdrawal, or avoidance of deeper conversations. When someone loves you too openly, it can feel suffocating — even if you're also lonely inside." },
+      { icon:"⚡", title:"Your challenge", text:"Allowing yourself to be seen and staying in that exposure. The pattern of distancing protects you from perceived engulfment — but it also keeps you isolated. The work is learning that closeness doesn't mean losing yourself." },
+      { icon:"🔮", title:"What helps you thrive", text:"A partner who respects your space without taking it personally. Gradual, consensual intimacy-building. Understanding the original fear — what made closeness feel dangerous. Learning that being fully known is possible and survivable." }
+    ]},
+  Co: { type:"The Comfort Seeker", emoji:"🏠", color:"#8a7a9e", tagBg:"rgba(138,122,158,0.15)", tagColor:"#5a4a7a",
+    subtitle:"You find safety in the familiar — even when familiar has stopped growing.",
+    sections:[
+      { icon:"💜", title:"Who you are", text:"You value security, predictability, and the comfort of what you know. You build deep loyalty and warmth in relationships. But you may also stay in dynamics long after they've stopped serving you, simply because leaving the known feels more frightening than enduring the familiar." },
+      { icon:"🏠", title:"In relationships", text:"You may mistake comfort for compatibility, or familiarity for love. You resist change even when growth is calling. Partners may feel that you're wonderful — but resistant to evolving together. The relationship may plateau rather than deepen." },
+      { icon:"⚡", title:"Your challenge", text:"Distinguishing between genuine security and comfortable stagnation. Growth requires discomfort. Staying in something past its expiry date because leaving is scary is not loyalty — it's fear. True security comes from within, not from staying in the known." },
+      { icon:"🔮", title:"What helps you thrive", text:"Relationships that value both stability and growth. Gentle, encouraging challenges that expand your comfort zone. Therapy to examine what you're actually afraid of when change looms. Learning that the unfamiliar can become a new home." }
+    ]},
+  He: { type:"The Healer", emoji:"🕯️", color:"#9e8a6e", tagBg:"rgba(158,138,110,0.15)", tagColor:"#6a4a2a",
+    subtitle:"You love people for their potential — and lose yourself in helping them reach it.",
+    sections:[
+      { icon:"❤️", title:"Who you are", text:"You are drawn to people who need something — healing, guidance, saving, believing in. Your love is generous and devoted. But you often give far more than you receive, and you may confuse caring for someone with loving them. The healer pattern often masks a deep fear of being needed only for what you do, not who you are." },
+      { icon:"🕯️", title:"In relationships", text:"You may attract people who are emotionally wounded, inconsistent, or struggling. You pour yourself into them. But when they heal — or when they don't — you often find yourself depleted and overlooked. You may also stay in unhealthy relationships because leaving feels like abandoning someone who needs you." },
+      { icon:"⚡", title:"Your challenge", text:"Recognising that you are worthy of love that doesn't require you to earn it through service. You are allowed to have needs. A relationship where only one person is cared for is not a relationship — it's a responsibility. You deserve to be chosen for who you are, not just what you provide." },
+      { icon:"🔮", title:"What helps you thrive", text:"A partner who gives as well as receives. Learning to express your own needs without guilt. Therapy to examine why helping feels safer than being helped. Discovering that being cared for is not weakness — it is connection." }
+    ]}
+};
+
+let current = 0;
+let answers = new Array(questions.length).fill(null);
+
+function render() {
+  const q = questions[current];
+  document.getElementById('qNum').textContent = 'Question ' + (current+1);
+  document.getElementById('qText').textContent = q.text;
+  document.getElementById('progressText').textContent = 'Question ' + (current+1) + ' of ' + questions.length;
+  const pct = Math.round((current / questions.length) * 100);
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('btnBack').style.display = current > 0 ? 'block' : 'none';
+  const wrap = document.getElementById('optionsWrap');
+  wrap.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt' + (answers[current] === i ? ' selected' : '');
+    btn.textContent = opt.text;
+    btn.onclick = () => selectOpt(i);
+    wrap.appendChild(btn);
+  });
+  const next = document.getElementById('btnNext');
+  next.textContent = current === questions.length - 1 ? 'See My Result ✦' : 'Continue →';
+  next.className = 'btn-next' + (answers[current] !== null ? ' active' : '');
+}
+
+function selectOpt(i) {
+  answers[current] = i;
+  document.querySelectorAll('.opt').forEach((b, idx) => b.classList.toggle('selected', idx === i));
+  document.getElementById('btnNext').classList.add('active');
+}
+
+function goNext() {
+  if (answers[current] === null) return;
+  if (current < questions.length - 1) {
+    current++;
+    render();
+    document.querySelector('.card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else { showResult(); }
+}
+
+function goBack() {
+  if (current > 0) { current--; render(); }
+}
+
+function showResult() {
+  const totals = {};
+  Object.keys(results).forEach(k => totals[k] = 0);
+  answers.forEach((ans, qi) => {
+    if (ans !== null) {
+      const scores = questions[qi].opts[ans].scores;
+      Object.keys(scores).forEach(k => totals[k] = (totals[k]||0) + scores[k]);
+    }
+  });
+  const winner = Object.keys(totals).reduce((a,b) => totals[a] > totals[b] ? a : b);
+  const r = results[winner];
+  const total = Object.values(totals).reduce((a,b) => a+b, 0) || 1;
+  document.getElementById('progressText').textContent = 'Complete!';
+  document.getElementById('progressPct').textContent = '100%';
+  document.getElementById('progressFill').style.width = '100%';
+  const card = document.getElementById('quizCard');
+  card.innerHTML = `
+    <div class="result-box">
+      <div class="result-type-tag" style="background:${r.tagBg};color:${r.tagColor};">${r.emoji} ${r.type}</div>
+      <div class="result-title" style="color:${r.color}">${r.emoji} ${r.type}</div>
+      <div class="result-subtitle">${r.subtitle}</div>
+      <div class="scores">
+        ${Object.entries(totals).map(([k,v]) => `
+          <div class="score-row">
+            <div class="score-label"><span>${results[k].emoji} ${results[k].type}</span><span>${Math.round((v/total)*100)}%</span></div>
+            <div class="score-bar"><div class="score-fill" style="width:${Math.round((v/total)*100)}%;background:${results[k].color}"></div></div>
+          </div>`).join('')}
+      </div>
+      <div class="detail-sections">
+        ${r.sections.map(s => `<div class="detail-card"><h3>${s.icon} ${s.title}</h3><p>${s.text}</p></div>`).join('')}
+      </div>
+      <button class="share-btn" onclick="shareResult('${r.type}','${r.emoji}','${r.subtitle}')">📤 Share My Result</button>
+      <button class="retake-btn" onclick="retake()">↩ Retake Quiz</button>
+      <a class="home-btn" href="index.html">← Explore More Quizzes</a>
+    </div>`;
+}
+
+function shareResult(type, emoji, subtitle) {
+  const text = emoji + ' My result: ' + type + '\n"' + subtitle + '"\n\nFind out yours 👉 ' + window.location.href;
+  if (navigator.share) navigator.share({ title: 'My Quiz Result', text });
+  else navigator.clipboard.writeText(text).then(() => alert('Result copied! Share it 🎉'));
+}
+
+function retake() {
+  current = 0;
+  answers = new Array(questions.length).fill(null);
+  document.getElementById('quizCard').innerHTML = `
+    <div class="question-num" id="qNum"></div>
+    <div class="question-text" id="qText"></div>
+    <div class="options" id="optionsWrap"></div>
+    <div class="nav-row">
+      <button class="btn-back" id="btnBack" onclick="goBack()" style="display:none">← Back</button>
+      <button class="btn-next" id="btnNext" onclick="goNext()">Continue →</button>
+    </div>`;
+  render();
+}
+
+render();
+
+</script>
+</body>
+</html>

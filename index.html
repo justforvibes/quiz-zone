@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Know Yourself — Free Psychology Quizzes for Self-Discovery</title>
+  <meta name="description" content="Free psychology quizzes to understand yourself deeply. Discover your attachment style, love language, trauma response, emotional maturity, inner child wound, relationship patterns, and self-worth level."/>
+  <meta name="keywords" content="psychology quiz, attachment style test, love language quiz, emotional maturity test, trauma response quiz, inner child wound, self worth quiz, relationship pattern test, free self discovery quiz"/>
+  <meta property="og:title" content="Know Yourself — Free Psychology Quizzes"/>
+  <meta property="og:description" content="7 deep psychology quizzes to understand how you love, heal, and grow."/>
+  <meta property="og:type" content="website"/>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600;1,400&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f5f0eb; --card: #fffdf9; --border: #e2d9ce;
+      --text: #2c2416; --muted: #9a8f82; --accent: #c0845a;
+      --accent2: #7a9e8e; --soft: #e8ddd4;
+    }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'Nunito', sans-serif;
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; padding: 40px 16px 80px;
+    }
+    .wrap { width: 100%; max-width: 680px; }
+    header { text-align: center; margin-bottom: 48px; }
+    .tag { display: inline-block; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+    h1 { font-family: 'Lora', serif; font-size: clamp(2rem, 6vw, 3rem); font-weight: 600; line-height: 1.2; color: var(--text); }
+    header p { margin-top: 14px; color: var(--muted); font-size: 15px; font-weight: 300; line-height: 1.7; max-width: 500px; margin-left: auto; margin-right: auto; }
+    .divider { width: 40px; height: 2px; background: var(--accent); margin: 20px auto 0; border-radius: 2px; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-bottom: 40px; }
+
+    .quiz-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 24px 22px;
+      text-decoration: none; color: var(--text);
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex; flex-direction: column; gap: 10px;
+      box-shadow: 0 2px 12px rgba(192,132,90,0.06);
+    }
+    .quiz-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(192,132,90,0.12); }
+    .card-top { display: flex; align-items: center; justify-content: space-between; }
+    .card-emoji { font-size: 2rem; }
+    .card-badge {
+      font-size: 10px; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; padding: 4px 10px;
+      border-radius: 100px;
+    }
+    .card-title { font-family: 'Lora', serif; font-size: 1.1rem; font-weight: 600; color: var(--text); }
+    .card-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .card-meta { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+    .card-meta span { font-size: 11px; color: var(--muted); }
+    .card-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--muted); }
+    .card-cta {
+      display: inline-block; margin-top: 6px; font-size: 13px;
+      color: var(--accent); font-weight: 600;
+    }
+
+    .about-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 28px 24px; margin-bottom: 20px; }
+    .about-card h2 { font-family: 'Lora', serif; font-size: 1.2rem; margin-bottom: 12px; }
+    .about-card p { font-size: 13px; color: var(--muted); line-height: 1.8; }
+
+    .seo-block { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px 24px; }
+    .seo-block p { font-size: 12px; color: var(--muted); line-height: 1.8; }
+    .seo-block strong { color: var(--text); font-weight: 600; }
+
+    footer { margin-top: 40px; text-align: center; color: var(--muted); font-size: 12px; }
+    footer a { color: var(--accent); text-decoration: none; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="tag">🧠 Self-Discovery</div>
+    <h1>Know Yourself</h1>
+    <p>7 deep psychology quizzes to understand how you love, heal, connect, and grow. No sign-up. No judgment. Just honest reflection.</p>
+    <div class="divider"></div>
+  </header>
+
+  <div class="grid">
+    <a class="quiz-card" href="attachment-style.html">
+      <div class="card-top">
+        <span class="card-emoji">🌿</span>
+        <span class="card-badge" style="background:rgba(122,158,142,0.15);color:#4a7a6a;">Most Popular</span>
+      </div>
+      <div class="card-title">Attachment Style</div>
+      <div class="card-desc">Are you Secure, Anxious, Avoidant, or Fearful? Discover the deep pattern behind how you love.</div>
+      <div class="card-meta"><span>12 questions</span><div class="card-dot"></div><span>~5 min</span></div>
+      <span class="card-cta">Take quiz →</span>
+    </a>
+
+    <a class="quiz-card" href="love-language.html">
+      <div class="card-top">
+        <span class="card-emoji">💌</span>
+        <span class="card-badge" style="background:rgba(192,132,90,0.15);color:#8a5a2a;">Trending</span>
+      </div>
+      <div class="card-title">Love Language</div>
+      <div class="card-desc">Words, touch, time, gifts, or acts? Find out how you give and receive love most naturally.</div>
+      <div class="card-meta"><span>12 questions</span><div class="card-dot"></div><span>~5 min</span></div>
+      <span class="card-cta">Take quiz →</span>
+    </a>
+
+    <a class="quiz-card" href="emotional-maturity.html">
+      <div class="card-top">
+        <span class="card-emoji">🌱</span>
+        <span class="card-badge" style="background:rgba(99,153,34,0.12);color:#3B6D11;">Insightful</span>
+      </div>
+      <div class="card-title">Emotional Maturity</div>
+      <div class="card-desc">How emotionally evolved are you really? This quiz goes beyond surface feelings into real self-awareness.</div>
+      <div class="card-meta"><span>12 questions</span><div class="card-dot"></div><span>~5 min</span></div>
+      <span class="card-cta">Take quiz →</span>
+    </a>
+
+    <a class="quiz-card" href="trauma-response.html">
+      <div class="card-top">
+        <span class="card-emoji">🛡️</span>
+        <span class="card-badge" style="background:rgba(186,117,23,0.12);color:#854F0B;">Deep</span>
+      </div>
+      <div class="card-title">Trauma Response Style</div>
+      <div class="card-desc">Fight, Flight, Freeze, or Fawn? Understand the survival pattern your nervous system learned.</div>
+      <div class="card-meta"><span>12 questions</span><div class="card-dot"></div><span>~5 min</span></div>
+      <span class="card-cta">Take quiz →</span>
+    </a>
+
+    <a class="quiz-card" href="inner-child.html">
+      <div class="card-top">
+        <span class="card-emoji">🧒</span>
+        <span class="card-badge" style="background:rgba(212,83,126,0.12);color:#993556;">Healing</span>
+      </div>
+      <div class="card-title">Inner Child Wound</div>
+      <div class="card-desc">Abandoned, rejected, humiliated, or betrayed? Discover the childhood wound quietly running your adult life.</div>
+      <div class="card-meta"><span>12 questions</span><div class="card-dot"></div><span>~5 min</span></div>
+      <span class="card-cta">Take quiz →</span>
+    </a>
+
+    <a class="quiz-card" href="relationship-pattern.html">
+      <div class="card-top">
+        <span class="card-emoji">🔄</span>
+        <span class="card-badge" style="background:rgba(55,138,221,0.12);color:#185FA5;">Eye-opening</span>
+      </div>
+      <div class="card-title">Relationship Pattern</div>
+      <div class="card-desc">Do you attract the same kind of people? Uncover the unconscious pattern playing out in your relationships.</div>
+      <div class="card-meta"><span>12 questions</span><div class="card-dot"></div><span>~5 min</span></div>
+      <span class="card-cta">Take quiz →</span>
+    </a>
+
+    <a class="quiz-card" href="self-worth.html">
+      <div class="card-top">
+        <span name="card-emoji">✨</span>
+        <span class="card-badge" style="background:rgba(138,122,158,0.15);color:#5a4a7a;">Powerful</span>
+      </div>
+      <div class="card-title">Self-Worth Level</div>
+      <div class="card-desc">How much do you truly value yourself? Not what you tell people — what your patterns actually reveal.</div>
+      <div class="card-meta"><span>12 questions</span><div class="card-dot"></div><span>~5 min</span></div>
+      <span class="card-cta">Take quiz →</span>
+    </a>
+  </div>
+
+  <div class="about-card">
+    <h2>✦ Why these quizzes?</h2>
+    <p>Most of what happens in our relationships — the patterns, the fears, the reactions — starts long before we're aware of it. These quizzes are designed to give you a mirror, not a verdict. They're rooted in psychological frameworks like attachment theory, trauma response patterns, love languages, and inner child work. Use them as a starting point for self-reflection, honest conversations, or deeper healing.</p>
+  </div>
+
+  <div class="seo-block">
+    <p>Explore our free <strong>psychology quizzes</strong> including the <strong>attachment style test</strong>, <strong>love language quiz</strong>, <strong>emotional maturity test</strong>, <strong>trauma response style</strong> (fight, flight, freeze, fawn), <strong>inner child wound quiz</strong>, <strong>relationship pattern test</strong>, and <strong>self-worth level quiz</strong>. All quizzes are based on established psychological concepts and are completely free with no sign-up required.</p>
+  </div>
+
+  <footer>Made with 💗 by <a href="https://justforvibes.github.io">JustForVibes</a> · For self-reflection, not clinical diagnosis.</footer>
+</div>
+</body>
+</html>
