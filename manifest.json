@@ -2,7 +2,7 @@
   "name": "Know Yourself — Psychology Quizzes",
   "short_name": "Know Yourself",
   "description": "7 free psychology quizzes for deep self-discovery",
-  "start_url": "/psychology-quizzes/",
+  "start_url": "/quiz-zone/",
   "display": "standalone",
   "background_color": "#f5f0eb",
   "theme_color": "#c0845a",
